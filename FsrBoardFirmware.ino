@@ -41,7 +41,7 @@ void setup()
   for (size_t i = 0; i < SENSOR_COUNT; i++) 
   {
     sensor[i] = new Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, TRIGGER_THRESHOLD, fsrAnalogPin[i]);
-	sensorLed->add(sensor[i]);
+	sensorLed->add(sensor[i], fsrDebugPin[i]);
   }
 }
 

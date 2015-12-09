@@ -18,19 +18,70 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <Arduino.h>
+#include "Sensor.h"
 #include "SensorLed.h"
+#include "Configuration.h"
 
 SensorLed::SensorLed()
+	: state(SLS_NONE)
+	, currentLed(0)
+	, timeAccu(0)
+	, lastTime(millis())
 {
 
 }
 
-void SensorLed::add(Sensor* sensor)
+void SensorLed::add(Sensor* sensor, int sensorLedPin)
 {
-	sensors[sensorCount++] = sensor;
+	sensors[sensorCount] = sensor;
+	sensorLed[sensorCount] = sensorLedPin;
+
+	sensorCount++;
 }
 
 void SensorLed::update(unsigned long time)
 {
+	switch (state)
+	{
+	case SLS_NONE:
+		for (size_t i = 0; i < sensorCount; i++)
+		{
+			pinMode(sensorLed[i], OUTPUT);
+			analogWrite(sensorLed[i], 0);
+		}
+		break;
+	case SLS_CALIBRATE:
+		if (sensors[0]->is_calibrating() || sensors[1]->is_calibrating() || sensors[2]->is_calibrating())
+		{
+			unsigned long deltaTime = labs(time - lastTime);
+			lastTime = time;
+			timeAccu += deltaTime;
 
+			if (timeAccu >= CALIBRATION_LED_DELAY)
+			{
+				analogWrite(sensorLed[currentLed], 0);
+
+				timeAccu -= CALIBRATION_LED_DELAY;
+				currentLed++;
+				if (currentLed >= sensorCount)
+				{
+					currentLed = 0;
+				}
+
+				analogWrite(sensorLed[currentLed], 255);
+			}
+		}
+		else
+		{
+			state = SLS_MONITORING;
+		}
+		break;
+	case SLS_MONITORING:
+		for (size_t i = 0; i < sensorCount; i++)
+		{
+			analogWrite(sensorLed[i], sensors[i]->shortAverage());
+		}
+		break;
+	}
 }

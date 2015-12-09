@@ -24,15 +24,27 @@
 
 class Sensor;
 
+enum SensorLedState
+{
+	SLS_NONE,
+	SLS_CALIBRATE,
+	SLS_MONITORING,
+};
+
 class SensorLed
 {
 public:
   SensorLed();
-  void add(Sensor* sensor);
+  void add(Sensor* sensor, int sensorLedPin);
   void update(unsigned long time);
 
 private:
-  Sensor* sensors[4];
-  size_t sensorCount;
+  Sensor*			sensors[4];
+  int				sensorLed[4];
+  size_t			sensorCount;
+  SensorLedState	state;
+  size_t			currentLed;
+  unsigned long		lastTime;
+  unsigned long		timeAccu;
 };
 
