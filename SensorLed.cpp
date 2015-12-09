@@ -20,8 +20,17 @@
 
 #include "SensorLed.h"
 
-SensorLed::SensorLed(size_t sensorCount, Sensor* sensor[], const int sensorLedPin[])
+SensorLed::SensorLed()
 {
-  
+
 }
 
+void SensorLed::add(Sensor* sensor)
+{
+	sensors[sensorCount++] = sensor;
+}
+
+void SensorLed::update(unsigned long time)
+{
+
+}

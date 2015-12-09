@@ -37,12 +37,12 @@ void setup()
   
   endstop = new Endstop(DEFAULT_ENDSTOP_MIN_HIGH_MS);
 
+  sensorLed = new SensorLed();
   for (size_t i = 0; i < SENSOR_COUNT; i++) 
   {
     sensor[i] = new Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, TRIGGER_THRESHOLD, fsrAnalogPin[i]);
+	sensorLed->add(sensor[i]);
   }
-
-  sensorLed = new SensorLed(SENSOR_COUNT, sensor, fsrDebugPin);
 }
 
 void loop() 
@@ -55,6 +55,11 @@ void loop()
     sensor[i]->update(millis());
     endstop->update(millis(), sensor[i]->is_triggered());
   }
+
+  //
+  // update sensor debug led display
+  //
+  sensorLed->update(millis());
 
   //
   // handle calibration switch

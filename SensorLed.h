@@ -27,6 +27,12 @@ class Sensor;
 class SensorLed
 {
 public:
-  SensorLed(size_t sensorCount, Sensor* sensor[], const int sensorLedPin[]);
+  SensorLed();
+  void add(Sensor* sensor);
+  void update(unsigned long time);
+
+private:
+  Sensor* sensors[4];
+  size_t sensorCount;
 };
 
