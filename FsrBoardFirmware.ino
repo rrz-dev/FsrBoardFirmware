@@ -23,16 +23,23 @@
 #include "Pins.h"
 #include "Sensor.h"
 #include "SensorLed.h"
+#include "GCodeParser.h"
 
 Sensor* sensor[SENSOR_COUNT];
 Endstop* endstop;
 SensorLed* sensorLed;
+GCodeParser* parser;
 
 const int fsrAnalogPin[] = { SENSOR1_ANALOG_PIN, SENSOR2_ANALOG_PIN, SENSOR3_ANALOG_PIN };
 const int fsrDebugPin[] = { SENSOR1_LED_PIN, SENSOR2_LED_PIN, SENSOR3_LED_PIN };
 
 void setup() 
 {
+  Serial.begin(115200);
+  //while (!Serial) { }
+    
+  parser = new GCodeParser();
+  
   pinMode(CALIBRATION_SWITCH_PIN, INPUT_PULLUP);
   
   endstop = new Endstop(DEFAULT_ENDSTOP_MIN_HIGH_MS);
@@ -65,5 +72,20 @@ void loop()
   // update sensor debug led display
   //
   sensorLed->update(millis());
+}
+
+void addCommand(Command c)
+{
+  //TODO: handle GCode commands
+}
+
+void serialEvent()
+{
+  //TODO: add I2C
+  
+  while (Serial.available() > 0)  //TODO: limit byte reads per loop iteration
+  {
+    parser->parse( Serial.read(), addCommand );
+  }
 }
 
