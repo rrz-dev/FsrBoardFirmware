@@ -25,12 +25,14 @@
 #include "SensorLed.h"
 #include "GCodeParser.h"
 
-Sensor* sensor[SENSOR_COUNT];
+Sensor sensor[SENSOR_COUNT] = { Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, TRIGGER_THRESHOLD, SENSOR1_ANALOG_PIN) 
+                              , Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, TRIGGER_THRESHOLD, SENSOR2_ANALOG_PIN)
+                              , Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, TRIGGER_THRESHOLD, SENSOR3_ANALOG_PIN) 
+                              } ;
 Endstop endstop(DEFAULT_ENDSTOP_MIN_HIGH_MS);
 SensorLed sensorLed;
-GCodeParser* parser;
+GCodeParser parser;
 
-const int fsrAnalogPin[] = { SENSOR1_ANALOG_PIN, SENSOR2_ANALOG_PIN, SENSOR3_ANALOG_PIN };
 const int fsrDebugPin[] = { SENSOR1_LED_PIN, SENSOR2_LED_PIN, SENSOR3_LED_PIN };
 
 void setup() 
@@ -40,14 +42,11 @@ void setup()
 
   Serial.println("INFO:Welcome to FSR board V0.9 Firmware V0.75");
     
-  parser = new GCodeParser();
-  
   pinMode(CALIBRATION_SWITCH_PIN, INPUT_PULLUP);
   
   for (size_t i = 0; i < SENSOR_COUNT; i++) 
   {
-    sensor[i] = new Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, TRIGGER_THRESHOLD, fsrAnalogPin[i]);
-	  sensorLed.add(sensor[i], fsrDebugPin[i]);
+	  sensorLed.add(&sensor[i], fsrDebugPin[i]);
   }
 }
 
@@ -61,10 +60,10 @@ void loop()
   {
     if (calibrationSwitch)
     {
-      sensor[i]->reset();
+      sensor[i].reset();
     }
-    sensor[i]->update(millis());
-    endstop.update(millis(), sensor[i]->is_triggered());
+    sensor[i].update(millis());
+    endstop.update(millis(), sensor[i].is_triggered());
   }
 
   //
@@ -84,7 +83,7 @@ void serialEvent()
   
   while (Serial.available() > 0)  //TODO: limit byte reads per loop iteration
   {
-    parser->parse( Serial.read(), addCommand );
+    parser.parse( Serial.read(), addCommand );
   }
 }
 
