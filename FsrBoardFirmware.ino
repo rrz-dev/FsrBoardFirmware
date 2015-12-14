@@ -26,8 +26,8 @@
 #include "GCodeParser.h"
 
 Sensor* sensor[SENSOR_COUNT];
-Endstop* endstop;
-SensorLed* sensorLed;
+Endstop endstop(DEFAULT_ENDSTOP_MIN_HIGH_MS);
+SensorLed sensorLed;
 GCodeParser* parser;
 
 const int fsrAnalogPin[] = { SENSOR1_ANALOG_PIN, SENSOR2_ANALOG_PIN, SENSOR3_ANALOG_PIN };
@@ -44,13 +44,10 @@ void setup()
   
   pinMode(CALIBRATION_SWITCH_PIN, INPUT_PULLUP);
   
-  endstop = new Endstop(DEFAULT_ENDSTOP_MIN_HIGH_MS);
-
-  sensorLed = new SensorLed();
   for (size_t i = 0; i < SENSOR_COUNT; i++) 
   {
     sensor[i] = new Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, TRIGGER_THRESHOLD, fsrAnalogPin[i]);
-	  sensorLed->add(sensor[i], fsrDebugPin[i]);
+	  sensorLed.add(sensor[i], fsrDebugPin[i]);
   }
 }
 
@@ -67,13 +64,13 @@ void loop()
       sensor[i]->reset();
     }
     sensor[i]->update(millis());
-    endstop->update(millis(), sensor[i]->is_triggered());
+    endstop.update(millis(), sensor[i]->is_triggered());
   }
 
   //
   // update sensor debug led display
   //
-  sensorLed->update(millis());
+  sensorLed.update(millis());
 }
 
 void addCommand(Command c)
