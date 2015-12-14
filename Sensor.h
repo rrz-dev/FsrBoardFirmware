@@ -48,6 +48,7 @@ private:
   CircularBuffer<uint16_t>* shortAverageBuffer;
   uint16_t triggerThreshold;
   unsigned long lastTime;
+  unsigned long timeAccu;
   int analogPin;
 };
 

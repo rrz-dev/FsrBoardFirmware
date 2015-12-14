@@ -35,8 +35,10 @@ const int fsrDebugPin[] = { SENSOR1_LED_PIN, SENSOR2_LED_PIN, SENSOR3_LED_PIN };
 
 void setup() 
 {
-  Serial.begin(115200);
+  Serial.begin(9600);
   //while (!Serial) { }
+
+  Serial.println("INFO:Welcome to FSR board V0.9 Firmware V0.75");
     
   parser = new GCodeParser();
   

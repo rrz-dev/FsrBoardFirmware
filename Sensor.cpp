@@ -25,6 +25,7 @@ Sensor::Sensor(size_t longAverageBufferSize, size_t shortAverageBufferSize, uint
   , shortAverageBuffer(0)
   , triggerThreshold(triggerThreshold)
   , analogPin(analogPin)
+  , timeAccu(0)
 {
   createBuffer(longAverageBufferSize, shortAverageBufferSize);
 }
@@ -50,8 +51,12 @@ void Sensor::update(unsigned long time)
 
   shortAverageBuffer->push(v);
 
-  if (time - lastTime > (5000/longAverageBuffer->bufferSize()) )
+  timeAccu += time - lastTime;
+  unsigned long threshold = 5000/longAverageBuffer->bufferSize();
+
+  if (timeAccu > threshold )
   {
+    timeAccu -= threshold;
     longAverageBuffer->push(v);
   }
   lastTime = time;
