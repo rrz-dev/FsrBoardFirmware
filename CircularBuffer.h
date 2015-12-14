@@ -102,10 +102,10 @@ private:
 
 private:
   T* buffer;
-  size_t head;
-  size_t tail;
+  volatile size_t head;
+  volatile size_t tail;
   const size_t size;
   size_t count;
-  T avg;
+  volatile T avg;
 };
 

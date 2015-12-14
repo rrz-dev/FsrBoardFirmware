@@ -21,6 +21,7 @@
 #pragma once
 
 #define SENSOR_COUNT						          3
+#define LONG_AVERAGE_BUFFER_TIME            5000
 #define DEFAULT_LONG_AVERAGE_BUFFER_SIZE	16
 #define DEFAULT_SHORT_AVERAGE_BUFFER_SIZE	4
 #define DEFAULT_ENDSTOP_MIN_HIGH_MS			  100

@@ -49,6 +49,7 @@ private:
   uint16_t triggerThreshold;
   unsigned long lastTime;
   unsigned long timeAccu;
+  unsigned long longAverageThreshold;
   int analogPin;
 };
 
