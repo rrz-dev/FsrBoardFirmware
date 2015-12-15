@@ -19,6 +19,7 @@
 */
 
 #include "Endstop.h"
+#include "Pins.h"
 
 #include <Arduino.h>
 
@@ -27,7 +28,7 @@ Endstop::Endstop(long minimumTriggerTime)
   , triggeredSince(0)
   , minimumTriggerTime(minimumTriggerTime)
 {
-
+  pinMode(ENDSTOP_OUT_PIN, OUTPUT);
 }
 
 void Endstop::update(unsigned long time, bool triggered)
@@ -52,13 +53,13 @@ void Endstop::update(unsigned long time, bool triggered)
 
 void Endstop::endstopHigh()
 {
-  //TODO: switch on endstop out
+  digitalWrite(ENDSTOP_OUT_PIN, HIGH);
   //TODO: INVERT!!!
 }
 
 void Endstop::endstopLow()
 {
-  //TODO: switch off endstop out
+  digitalWrite(ENDSTOP_OUT_PIN, LOW);
   //TODO: INVERT!!!
 }
 

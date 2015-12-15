@@ -32,8 +32,8 @@ private:
   void endstopLow();
 
 private:
-  bool isTriggered;
-  unsigned long triggeredSince;
-  long minimumTriggerTime;
+  volatile bool isTriggered;
+  volatile unsigned long triggeredSince;
+  const long minimumTriggerTime;
 };
 

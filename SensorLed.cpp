@@ -29,7 +29,6 @@ SensorLed::SensorLed()
 	, timeAccu(0)
 	, lastTime(millis())
 {
-
 }
 
 void SensorLed::add(Sensor* sensor, int sensorLedPin)
@@ -50,6 +49,7 @@ void SensorLed::update(unsigned long time)
 			pinMode(sensorLed[i], OUTPUT);
 			analogWrite(sensorLed[i], 0);
 		}
+    state = SLS_CALIBRATE;
 		break;
 	case SLS_CALIBRATE:
 		if (sensors[0]->is_calibrating() || sensors[1]->is_calibrating() || sensors[2]->is_calibrating())
