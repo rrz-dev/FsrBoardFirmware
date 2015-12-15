@@ -23,7 +23,7 @@
 class Endstop
 {
 public:
-  Endstop(long minimumTriggerTime);
+  Endstop();
 
   void update(unsigned long time, bool triggered);
 
@@ -32,8 +32,8 @@ private:
   void endstopLow();
 
 private:
-  volatile bool isTriggered;
-  volatile unsigned long triggeredSince;
-  const long minimumTriggerTime;
+  bool isTriggered;
+  unsigned long triggeredSince;
+  long timeAccu;
 };
 

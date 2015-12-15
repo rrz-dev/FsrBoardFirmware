@@ -20,39 +20,45 @@
 
 #include "Endstop.h"
 #include "Pins.h"
+#include "Configuration.h"
 
 #include <Arduino.h>
 
-Endstop::Endstop(long minimumTriggerTime)
+Endstop::Endstop()
   : isTriggered(false)
   , triggeredSince(0)
-  , minimumTriggerTime(minimumTriggerTime)
 {
   pinMode(ENDSTOP_OUT_PIN, OUTPUT);
 }
 
 void Endstop::update(unsigned long time, bool triggered)
 {
+  unsigned long deltaTime = labs(time - triggeredSince);
+
   if (!isTriggered && triggered)
   {
     // endstop is just triggered
     isTriggered = true;
-    triggeredSince = time;
     endstopHigh();
+    timeAccu = DEFAULT_ENDSTOP_MIN_HIGH_MS;
   }
   else if (isTriggered)
   {
+    timeAccu -= deltaTime;
     // endstop is no longer triggered
-    if (labs(time - triggeredSince) > minimumTriggerTime)
+    if (timeAccu <= 0)
     {
       isTriggered = false;
       endstopLow();
     }
   }
+
+  triggeredSince = time;
 }
 
 void Endstop::endstopHigh()
 {
+  Serial.println("INFO:triggering endstop out");
   digitalWrite(ENDSTOP_OUT_PIN, HIGH);
   //TODO: INVERT!!!
 }

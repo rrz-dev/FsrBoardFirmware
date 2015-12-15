@@ -29,7 +29,7 @@ Sensor sensor[SENSOR_COUNT] = { Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT
                               , Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, TRIGGER_THRESHOLD, SENSOR2_ANALOG_PIN)
                               , Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, TRIGGER_THRESHOLD, SENSOR3_ANALOG_PIN) 
                               } ;
-Endstop endstop(DEFAULT_ENDSTOP_MIN_HIGH_MS);
+Endstop endstop;
 SensorLed sensorLed;
 GCodeParser parser;
 
@@ -56,6 +56,7 @@ void loop()
   // update sensors, trigger endstop and handle calibration switch
   //
   bool calibrationSwitch = !digitalRead(CALIBRATION_SWITCH_PIN);
+  bool sensorTriggered = false;
   for (size_t i = 0; i < SENSOR_COUNT; i++) 
   {
     if (calibrationSwitch)
@@ -63,8 +64,9 @@ void loop()
       sensor[i].reset();
     }
     sensor[i].update(millis());
-    endstop.update(millis(), sensor[i].is_triggered());
+    sensorTriggered |= sensor[i].is_triggered();
   }
+  endstop.update(millis(), sensorTriggered);
 
   //
   // update sensor debug led display
