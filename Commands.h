@@ -20,22 +20,12 @@
 
 #pragma once
 
-class Endstop
+class Endstop;
+
+class Commands
 {
 public:
-  Endstop();
-
-  void update(unsigned long time, bool triggered);
-
-  bool is_triggered();
-
-private:
-  void endstopHigh();
-  void endstopLow();
-
-private:
-  bool isTriggered;
-  unsigned long triggeredSince;
-  long timeAccu;
+  static void printFirmwareInfo();
+  static void printEndstopStatus(Endstop endstop);
 };
 

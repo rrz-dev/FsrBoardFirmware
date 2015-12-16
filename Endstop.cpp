@@ -69,3 +69,8 @@ void Endstop::endstopLow()
   //TODO: INVERT!!!
 }
 
+bool Endstop::is_triggered()
+{
+  return isTriggered;
+}
+

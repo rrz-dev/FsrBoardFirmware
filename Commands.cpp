@@ -18,24 +18,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
+#include "Commands.h"
+#include "Endstop.h"
 
-class Endstop
+#include <Arduino.h>
+
+void Commands::printFirmwareInfo()
 {
-public:
-  Endstop();
+  Serial.println("INFO:Welcome to FSR board V0.9 Firmware V0.75");
+}
 
-  void update(unsigned long time, bool triggered);
-
-  bool is_triggered();
-
-private:
-  void endstopHigh();
-  void endstopLow();
-
-private:
-  bool isTriggered;
-  unsigned long triggeredSince;
-  long timeAccu;
-};
+void Commands::printEndstopStatus(Endstop endstop)
+{
+  Serial.print("INFO:endstop out status: ");
+  Serial.println(endstop.is_triggered());
+}
 

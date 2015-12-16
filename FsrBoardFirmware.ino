@@ -21,6 +21,8 @@
 #include <Wire.h>
 
 #include "Configuration.h"
+#include "Command.h"
+#include "Commands.h"
 #include "Endstop.h"
 #include "Pins.h"
 #include "Sensor.h"
@@ -45,7 +47,7 @@ void setup()
   Serial.begin(9600);
   while (!Serial) { }
 
-  Serial.println("INFO:Welcome to FSR board V0.9 Firmware V0.75");
+  Commands::printFirmwareInfo();
     
   pinMode(CALIBRATION_SWITCH_PIN, INPUT_PULLUP);
   
@@ -79,9 +81,35 @@ void loop()
   sensorLed.update(millis());
 }
 
+void handleMCode(Command c)
+{
+  switch (c.getCommandCode())
+  {
+    case 115:   // get firmware version and capabilities
+      Commands::printFirmwareInfo();
+      break;
+    case 119:   // get endstop status
+      Commands::printEndstopStatus(endstop);
+      break;
+  }
+}
+
+void handleGCode(Command c)
+{
+  //TODO: implement
+}
+
 void addCommand(Command c)
 {
-  //TODO: handle GCode commands
+  switch (c.getCommandType())
+  {
+    case M:
+      handleMCode(c);
+      break;
+    case G:
+      handleGCode(c);
+      break;
+  }
 }
 
 void receiveEvent(int howMany) 
@@ -94,8 +122,6 @@ void receiveEvent(int howMany)
 
 void serialEvent()
 {
-  //TODO: add I2C
-  
   while (Serial.available() > 0)  //TODO: limit byte reads per loop iteration
   {
     parser.parse( Serial.read(), addCommand );
