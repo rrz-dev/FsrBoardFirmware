@@ -38,6 +38,7 @@ void Configuration::load()
   bool eepromFormat = EEPROM.read(0) == 'F' && EEPROM.read(1) == 'S' && EEPROM.read(2) == 'R' && EEPROM.read(3) == 'B';
   if (!eepromFormat) 
   {
+    setDefaults();
     storeValues();
     return;
   }
@@ -76,12 +77,19 @@ void Configuration::storeValues()
   EEPROM.update(2, 'R');
   EEPROM.update(3, 'B');
   EEPROM.update(4, EEPROM_VERSION);
-  
+
+  int eepromAddress = 6;
+
+  EEPROM.update(eepromAddress, longAverageBufferTime); eepromAddress += sizeof(longAverageBufferTime);
+  EEPROM.update(eepromAddress, defaultEndstopMinHighMs); eepromAddress += sizeof(defaultEndstopMinHighMs);
+  EEPROM.update(eepromAddress, triggerThreshold); eepromAddress += sizeof(triggerThreshold);
+  EEPROM.update(eepromAddress, calibrationLedDelay); eepromAddress += sizeof(calibrationLedDelay);
+  EEPROM.update(eepromAddress, i2cSlaveAddress); eepromAddress += sizeof(i2cSlaveAddress);
 }
 
 void Configuration::printSettings()
 {
-  Serial.print("INFO:FSR board configuration version"); Serial.println(EEPROM_VERSION);
+  Serial.print("INFO:FSR board configuration version ");Serial.println(EEPROM_VERSION);
   Serial.print("INFO:longAverageBufferTime=");          Serial.println(longAverageBufferTime);
   Serial.print("INFO:defaultEndstopMinHighMs=");        Serial.println(defaultEndstopMinHighMs);  
   Serial.print("INFO:triggerThreshold=");               Serial.println(triggerThreshold);
