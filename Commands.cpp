@@ -35,20 +35,20 @@ void Commands::printEndstopStatus(Endstop endstop)
   Serial.println(endstop.is_triggered());
 }
 
-void Commands::factorySettings(Configuration config)
+void Commands::factorySettings()
 {
-  config.setDefaults();
+  Configuration::setDefaults();
   Serial.println("INFO:reverted to factory settings, but not stored in EEPROM");
 }
 
-void Commands::storeSettings(Configuration config)
+void Commands::storeSettings()
 {
-  config.storeValues();
+  Configuration::storeValues();
   Serial.println("INFO:stored settings to EEPROM");
 }
 
-void Commands::printSettings(Configuration config)
+void Commands::printSettings()
 {
-  config.printSettings();
+  Configuration::printSettings();
 }
 

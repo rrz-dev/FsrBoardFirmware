@@ -27,7 +27,7 @@
 class Sensor
 {
 public:
-  Sensor(size_t longAverageBufferSize, size_t shortAverageBufferSize, uint16_t triggerThreshold, int analogPin);
+  Sensor(size_t longAverageBufferSize, size_t shortAverageBufferSize, int analogPin);
   ~Sensor();
 
   void update(unsigned long time);
@@ -46,7 +46,6 @@ private:
 private:
   CircularBuffer<uint16_t>* longAverageBuffer;
   CircularBuffer<uint16_t>* shortAverageBuffer;
-  uint16_t triggerThreshold;
   unsigned long lastTime;
   unsigned long timeAccu;
   unsigned long longAverageThreshold;

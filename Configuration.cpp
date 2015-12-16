@@ -20,22 +20,76 @@
 
 #include "Configuration.h"
 
+#include <EEPROM.h>
+
+unsigned long Configuration::longAverageBufferTime;
+unsigned long Configuration::defaultEndstopMinHighMs;
+uint16_t Configuration::triggerThreshold;
+unsigned long Configuration::calibrationLedDelay;
+byte Configuration::i2cSlaveAddress;
+
 Configuration::Configuration()
 {
-  //TODO: implement
+  setDefaults();
+}
+
+void Configuration::load()
+{
+  bool eepromFormat = EEPROM.read(0) == 'F' && EEPROM.read(1) == 'S' && EEPROM.read(2) == 'R' && EEPROM.read(3) == 'B';
+  if (!eepromFormat) 
+  {
+    storeValues();
+    return;
+  }
+  
+  byte version = EEPROM.read(4);
+
+  if (version < EEPROM_VERSION)
+  {
+    updateEepromFormat(version);
+  }
+
+  // 1 byte padding
+
+  int eepromAddress = 6;
+
+  EEPROM.get(eepromAddress, longAverageBufferTime); eepromAddress += sizeof(longAverageBufferTime);
+  EEPROM.get(eepromAddress, defaultEndstopMinHighMs); eepromAddress += sizeof(defaultEndstopMinHighMs);
+  EEPROM.get(eepromAddress, triggerThreshold); eepromAddress += sizeof(triggerThreshold);
+  EEPROM.get(eepromAddress, calibrationLedDelay); eepromAddress += sizeof(calibrationLedDelay);
+  EEPROM.get(eepromAddress, i2cSlaveAddress); eepromAddress += sizeof(i2cSlaveAddress);
 }
 
 void Configuration::setDefaults()
 {
-  //TODO: implement
+  longAverageBufferTime = 5000;
+  defaultEndstopMinHighMs = 500;
+  triggerThreshold = 14;
+  calibrationLedDelay = 250;
+  i2cSlaveAddress = 77;
 }
 
 void Configuration::storeValues()
 {
-  //TODO: implement
+  EEPROM.update(0, 'F');
+  EEPROM.update(1, 'S');
+  EEPROM.update(2, 'R');
+  EEPROM.update(3, 'B');
+  EEPROM.update(4, EEPROM_VERSION);
+  
 }
 
 void Configuration::printSettings()
+{
+  Serial.print("INFO:FSR board configuration version"); Serial.println(EEPROM_VERSION);
+  Serial.print("INFO:longAverageBufferTime=");          Serial.println(longAverageBufferTime);
+  Serial.print("INFO:defaultEndstopMinHighMs=");        Serial.println(defaultEndstopMinHighMs);  
+  Serial.print("INFO:triggerThreshold=");               Serial.println(triggerThreshold);
+  Serial.print("INFO:calibrationLedDelay=");            Serial.println(calibrationLedDelay);
+  Serial.print("INFO:i2cSlaveAddress=");                Serial.println(i2cSlaveAddress);
+}
+
+void Configuration::updateEepromFormat(byte version)
 {
   //TODO: implement
 }

@@ -21,10 +21,9 @@
 #include "Sensor.h"
 #include "Configuration.h"
 
-Sensor::Sensor(size_t longAverageBufferSize, size_t shortAverageBufferSize, uint16_t triggerThreshold, int analogPin)
+Sensor::Sensor(size_t longAverageBufferSize, size_t shortAverageBufferSize, int analogPin)
   : longAverageBuffer(0)
   , shortAverageBuffer(0)
-  , triggerThreshold(triggerThreshold)
   , analogPin(analogPin)
   , timeAccu(0)
 {
@@ -45,7 +44,7 @@ void Sensor::createBuffer(size_t longAverageBufferSize, size_t shortAverageBuffe
   delete shortAverageBuffer;
   shortAverageBuffer = new CircularBuffer<uint16_t>(shortAverageBufferSize);
 
-  longAverageThreshold = LONG_AVERAGE_BUFFER_TIME / longAverageBuffer->bufferSize();
+  longAverageThreshold = Configuration::getLongAverageBufferTime() / longAverageBuffer->bufferSize();
 }
 
 void Sensor::update(unsigned long time)
@@ -68,7 +67,7 @@ bool Sensor::is_triggered()
 {
   uint16_t v = static_cast<uint16_t>(labs(longAverageBuffer->average() - shortAverageBuffer->average()));
   
-  return v >= triggerThreshold;
+  return v >= Configuration::getTriggerThreshold();
 }
 
 void Sensor::reset()

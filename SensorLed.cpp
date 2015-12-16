@@ -58,11 +58,11 @@ void SensorLed::update(unsigned long time)
 			lastTime = time;
 			timeAccu += deltaTime;
 
-			if (timeAccu >= CALIBRATION_LED_DELAY)
+			if (timeAccu >= Configuration::getCalibrationLedDelay())
 			{
 				analogWrite(sensorLed[currentLed], 0);
 
-				timeAccu -= CALIBRATION_LED_DELAY;
+				timeAccu -= Configuration::getCalibrationLedDelay();
 				currentLed++;
 				if (currentLed >= sensorCount)
 				{

@@ -30,20 +30,21 @@
 #include "SensorLed.h"
 #include "GCodeParser.h"
 
-Sensor sensor[SENSOR_COUNT] = { Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, TRIGGER_THRESHOLD, SENSOR1_ANALOG_PIN) 
-                              , Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, TRIGGER_THRESHOLD, SENSOR2_ANALOG_PIN)
-                              , Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, TRIGGER_THRESHOLD, SENSOR3_ANALOG_PIN) 
+Sensor sensor[SENSOR_COUNT] = { Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, SENSOR1_ANALOG_PIN) 
+                              , Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, SENSOR2_ANALOG_PIN)
+                              , Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, SENSOR3_ANALOG_PIN) 
                               } ;
 Endstop endstop;
 SensorLed sensorLed;
 GCodeParser parser;
-Configuration config;
 
 const int fsrDebugPin[] = { SENSOR1_LED_PIN, SENSOR2_LED_PIN, SENSOR3_LED_PIN };
 
 void setup() 
 {
-  Wire.begin(I2C_SLAVE_ADDRESS);
+  Configuration::load();
+  
+  Wire.begin(Configuration::getI2cSlaveAddress());
   Wire.onReceive(receiveEvent);
   
   Serial.begin(9600);
@@ -94,13 +95,13 @@ void handleMCode(Command c)
       Commands::printEndstopStatus(endstop);
       break;
     case 500:   // store parameters in EEPROM
-      Commands::storeSettings(config);
+      Commands::storeSettings();
       break;
     case 502:   // revert to the default "factory settings"
-      Commands::factorySettings(config);
+      Commands::factorySettings();
       break;
     case 503:   // print settings
-      Commands::printSettings(config);
+      Commands::printSettings();
       break;
   }
 }

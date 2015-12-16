@@ -40,7 +40,7 @@ void Endstop::update(unsigned long time, bool triggered)
     // endstop is just triggered
     isTriggered = true;
     endstopHigh();
-    timeAccu = DEFAULT_ENDSTOP_MIN_HIGH_MS;
+    timeAccu = Configuration::getDefaultEndstopMinHighMs();
   }
   else if (isTriggered)
   {

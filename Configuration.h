@@ -20,22 +20,38 @@
 
 #pragma once
 
+#include "Arduino.h"
+
 #define SENSOR_COUNT						          3
-#define LONG_AVERAGE_BUFFER_TIME          5000
 #define DEFAULT_LONG_AVERAGE_BUFFER_SIZE	16
 #define DEFAULT_SHORT_AVERAGE_BUFFER_SIZE	4
-#define DEFAULT_ENDSTOP_MIN_HIGH_MS			  500
-#define TRIGGER_THRESHOLD					        14
-#define CALIBRATION_LED_DELAY				      250
-#define I2C_SLAVE_ADDRESS                 77
+#define EEPROM_VERSION                    0
 
 class Configuration
 {
 public:
   Configuration();
 
-  void setDefaults();
-  void storeValues();
-  void printSettings();
+  static void load();
+
+  static void setDefaults();
+  static void storeValues();
+  static void printSettings();
+
+  static unsigned long getLongAverageBufferTime() { return longAverageBufferTime; }
+  static unsigned long getDefaultEndstopMinHighMs() { return defaultEndstopMinHighMs; }
+  static uint16_t getTriggerThreshold() { return triggerThreshold; }
+  static unsigned long getCalibrationLedDelay() { return calibrationLedDelay; }
+  static byte getI2cSlaveAddress() { return i2cSlaveAddress; }
+
+private:
+  static void updateEepromFormat(byte version);
+
+private:
+  static unsigned long longAverageBufferTime;
+  static unsigned long defaultEndstopMinHighMs;
+  static uint16_t triggerThreshold;
+  static unsigned long calibrationLedDelay;
+  static byte i2cSlaveAddress;
 };
 
