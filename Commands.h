@@ -21,11 +21,14 @@
 #pragma once
 
 class Endstop;
+class Configuration;
 
 class Commands
 {
 public:
   static void printFirmwareInfo();
   static void printEndstopStatus(Endstop endstop);
+  static void factorySettings(Configuration config);
+  static void storeSettings(Configuration config);
 };
 

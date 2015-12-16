@@ -18,6 +18,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <EEPROM.h>
 #include <Wire.h>
 
 #include "Configuration.h"
@@ -36,6 +37,7 @@ Sensor sensor[SENSOR_COUNT] = { Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT
 Endstop endstop;
 SensorLed sensorLed;
 GCodeParser parser;
+Configuration config;
 
 const int fsrDebugPin[] = { SENSOR1_LED_PIN, SENSOR2_LED_PIN, SENSOR3_LED_PIN };
 
@@ -90,6 +92,12 @@ void handleMCode(Command c)
       break;
     case 119:   // get endstop status
       Commands::printEndstopStatus(endstop);
+      break;
+    case 500:   // store parameters in EEPROM
+      Commands::storeSettings(config);
+      break;
+    case 502:   // revert to the default "factory settings"
+      Commands::factorySettings(config);
       break;
   }
 }

@@ -20,6 +20,7 @@
 
 #include "Commands.h"
 #include "Endstop.h"
+#include "Configuration.h"
 
 #include <Arduino.h>
 
@@ -32,5 +33,17 @@ void Commands::printEndstopStatus(Endstop endstop)
 {
   Serial.print("INFO:endstop out status: ");
   Serial.println(endstop.is_triggered());
+}
+
+void Commands::factorySettings(Configuration config)
+{
+  config.setDefaults();
+  Serial.println("INFO:reverted to factory settings, but not stored in EEPROM");
+}
+
+void Commands::storeSettings(Configuration config)
+{
+  config.storeValues();
+  Serial.println("INFO:stored settings to EEPROM");
 }
 

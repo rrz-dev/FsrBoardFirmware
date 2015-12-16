@@ -18,23 +18,20 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
+#include "Configuration.h"
 
-#define SENSOR_COUNT						          3
-#define LONG_AVERAGE_BUFFER_TIME          5000
-#define DEFAULT_LONG_AVERAGE_BUFFER_SIZE	16
-#define DEFAULT_SHORT_AVERAGE_BUFFER_SIZE	4
-#define DEFAULT_ENDSTOP_MIN_HIGH_MS			  500
-#define TRIGGER_THRESHOLD					        14
-#define CALIBRATION_LED_DELAY				      250
-#define I2C_SLAVE_ADDRESS                 77
-
-class Configuration
+Configuration::Configuration()
 {
-public:
-  Configuration();
+  
+}
 
-  void setDefaults();
-  void storeValues();
-};
+void Configuration::setDefaults()
+{
+  
+}
+
+void Configuration::storeValues()
+{
+  
+}
 
