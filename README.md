@@ -12,7 +12,7 @@ Firmware for the RepRap FSR Board (http://www.repraptools.de) licensed under GPL
 # Setting keys and default values
 For setting configuration values use the M800 M-Code. It has two argument types: K and V.
 
-*Example usage: M800 K<key> V<value>*
+**Example usage:** M800 K*[key]* V*[value]*
 
 * longAverageBufferTime (default: 5000) - time in milliseconds on which the sensor values without touch are averaged
 * defaultEndstopMinHighMs (default: 500) - this is the time in milliseconds the endstop out is triggered at least
