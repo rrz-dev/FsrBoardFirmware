@@ -22,16 +22,21 @@
 
 Configuration::Configuration()
 {
-  
+  //TODO: implement
 }
 
 void Configuration::setDefaults()
 {
-  
+  //TODO: implement
 }
 
 void Configuration::storeValues()
 {
-  
+  //TODO: implement
+}
+
+void Configuration::printSettings()
+{
+  //TODO: implement
 }
 

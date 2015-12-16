@@ -47,3 +47,8 @@ void Commands::storeSettings(Configuration config)
   Serial.println("INFO:stored settings to EEPROM");
 }
 
+void Commands::printSettings(Configuration config)
+{
+  config.printSettings();
+}
+

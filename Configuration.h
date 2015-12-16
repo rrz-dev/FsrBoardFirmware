@@ -36,5 +36,6 @@ public:
 
   void setDefaults();
   void storeValues();
+  void printSettings();
 };
 

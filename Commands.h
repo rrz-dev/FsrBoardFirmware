@@ -30,5 +30,6 @@ public:
   static void printEndstopStatus(Endstop endstop);
   static void factorySettings(Configuration config);
   static void storeSettings(Configuration config);
+  static void printSettings(Configuration config);
 };
 

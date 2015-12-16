@@ -99,6 +99,9 @@ void handleMCode(Command c)
     case 502:   // revert to the default "factory settings"
       Commands::factorySettings(config);
       break;
+    case 503:   // print settings
+      Commands::printSettings(config);
+      break;
   }
 }
 

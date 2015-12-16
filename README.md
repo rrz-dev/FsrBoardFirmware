@@ -6,3 +6,4 @@ Firmware for the RepRap FSR Board (http://www.repraptools.de) licensed under GPL
 * M119 - display endstop status
 * M500 - store settings in EEPROM
 * M502 - revert to factory settings
+* M503 - print settings
