@@ -27,3 +27,5 @@
 #define DEFAULT_ENDSTOP_MIN_HIGH_MS			  500
 #define TRIGGER_THRESHOLD					        14
 #define CALIBRATION_LED_DELAY				      250
+#define I2C_SLAVE_ADDRESS                 77
+

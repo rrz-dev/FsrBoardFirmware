@@ -18,6 +18,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <Wire.h>
+
 #include "Configuration.h"
 #include "Endstop.h"
 #include "Pins.h"
@@ -37,8 +39,11 @@ const int fsrDebugPin[] = { SENSOR1_LED_PIN, SENSOR2_LED_PIN, SENSOR3_LED_PIN };
 
 void setup() 
 {
+  Wire.begin(I2C_SLAVE_ADDRESS);
+  Wire.onReceive(receiveEvent);
+  
   Serial.begin(9600);
-  //while (!Serial) { }
+  while (!Serial) { }
 
   Serial.println("INFO:Welcome to FSR board V0.9 Firmware V0.75");
     
@@ -77,6 +82,14 @@ void loop()
 void addCommand(Command c)
 {
   //TODO: handle GCode commands
+}
+
+void receiveEvent(int howMany) 
+{
+  while (Wire.available() > 0)  //TODO: limit byte reads per loop iteration
+  {
+    parser.parse( Wire.read(), addCommand );
+  }
 }
 
 void serialEvent()
