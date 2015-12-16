@@ -43,6 +43,7 @@ const int fsrDebugPin[] = { SENSOR1_LED_PIN, SENSOR2_LED_PIN, SENSOR3_LED_PIN };
 
 void setup() 
 {
+  //Configuration::killEEPROM();
   Configuration::load();
   
   Wire.begin(Configuration::getI2cSlaveAddress());
@@ -57,6 +58,7 @@ void setup()
   
   for (size_t i = 0; i < SENSOR_COUNT; i++) 
   {
+    sensor[i].reset();
 	  sensorLed.add(&sensor[i], fsrDebugPin[i]);
   }
 }

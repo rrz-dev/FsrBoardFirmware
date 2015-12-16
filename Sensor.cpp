@@ -43,8 +43,6 @@ void Sensor::createBuffer(size_t longAverageBufferSize, size_t shortAverageBuffe
 
   delete shortAverageBuffer;
   shortAverageBuffer = new CircularBuffer<uint16_t>(shortAverageBufferSize);
-
-  longAverageThreshold = Configuration::getLongAverageBufferTime() / longAverageBuffer->bufferSize();
 }
 
 void Sensor::update(unsigned long time)
@@ -72,6 +70,8 @@ bool Sensor::is_triggered()
 
 void Sensor::reset()
 {
+  longAverageThreshold = Configuration::getLongAverageBufferTime() / longAverageBuffer->bufferSize();
+
   longAverageBuffer->clear();
   shortAverageBuffer->clear();
 }

@@ -37,6 +37,7 @@ public:
   static void setDefaults();
   static void storeValues();
   static void printSettings();
+  static void killEEPROM();
 
   static void setKeyValue(String key, String value);
 

@@ -97,6 +97,14 @@ void Configuration::printSettings()
   Serial.print("INFO:i2cSlaveAddress=");                Serial.println(i2cSlaveAddress);
 }
 
+void Configuration::killEEPROM()
+{
+  for (int i = 0 ; i < EEPROM.length() ; i++) 
+  {
+    EEPROM.write(i, 0);
+  }
+}
+
 void Configuration::updateEepromFormat(byte version)
 {
   //TODO: implement
