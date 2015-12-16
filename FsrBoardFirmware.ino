@@ -25,6 +25,7 @@
 #include "Command.h"
 #include "Commands.h"
 #include "Endstop.h"
+#include "Parameter.h"
 #include "Pins.h"
 #include "Sensor.h"
 #include "SensorLed.h"
@@ -102,6 +103,9 @@ void handleMCode(Command c)
       break;
     case 503:   // print settings
       Commands::printSettings();
+      break;
+    case 800:   // set key value
+      Commands::setConfigurationValue(c.getParameterStringValue(K), c.getParameterStringValue(V));
       break;
   }
 }

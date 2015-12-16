@@ -129,6 +129,10 @@ void GCodeParser::parse(const char& c, AddCommandCallback addCommand)
         case 'T':
         case 'b':
         case 'B':
+        case 'k':
+        case 'K':
+        case 'v':
+        case 'V':
           parameter->setType((ParameterType)(c < 97 ? c : c - 32)); // make uppercase
           changeState(ScanParameterValue);
           return;

@@ -38,6 +38,8 @@ enum ParameterType
   Z = 'Z',
   PT = 'T',
   B = 'B',
+  K = 'K',
+  V = 'V',
 };
 
 enum ParameterValueType

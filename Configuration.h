@@ -38,6 +38,8 @@ public:
   static void storeValues();
   static void printSettings();
 
+  static void setKeyValue(String key, String value);
+
   static unsigned long getLongAverageBufferTime() { return longAverageBufferTime; }
   static unsigned long getDefaultEndstopMinHighMs() { return defaultEndstopMinHighMs; }
   static uint16_t getTriggerThreshold() { return triggerThreshold; }

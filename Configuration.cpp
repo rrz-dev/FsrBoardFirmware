@@ -94,3 +94,27 @@ void Configuration::updateEepromFormat(byte version)
   //TODO: implement
 }
 
+void Configuration::setKeyValue(String key, String value)
+{
+  if (key.equalsIgnoreCase("longAverageBufferTime"))
+  {
+    longAverageBufferTime = atol(value.c_str());
+  }
+  else if (key.equalsIgnoreCase("defaultEndstopMinHighMs"))
+  {
+    defaultEndstopMinHighMs = atol(value.c_str());
+  }
+  else if (key.equalsIgnoreCase("triggerThreshold"))
+  {
+    triggerThreshold = value.toInt();
+  }
+  else if (key.equalsIgnoreCase("calibrationLedDelay"))
+  {
+    calibrationLedDelay = atol(value.c_str());
+  }
+  else if (key.equalsIgnoreCase("i2cSlaveAddress"))
+  {
+    i2cSlaveAddress = value.toInt();
+  }
+}
+

@@ -52,3 +52,11 @@ void Commands::printSettings()
   Configuration::printSettings();
 }
 
+void Commands::setConfigurationValue(const char* k, const char* v)
+{
+  String key(k);
+  String value(v);
+
+  Configuration::setKeyValue(key, value);
+}
+

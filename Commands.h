@@ -30,5 +30,6 @@ public:
   static void factorySettings();
   static void storeSettings();
   static void printSettings();
+  static void setConfigurationValue(const char* key, const char* value);
 };
 
