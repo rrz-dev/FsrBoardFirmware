@@ -35,30 +35,35 @@ Configuration::Configuration()
 
 void Configuration::load()
 {
-  bool eepromFormat = EEPROM.read(0) == 'F' && EEPROM.read(1) == 'S' && EEPROM.read(2) == 'R' && EEPROM.read(3) == 'B';
-  if (!eepromFormat) 
+  Serial.println("INFO:loading eeprom configuration...");
+  
+  char eepromFormat[4];
+  EEPROM.get(0, eepromFormat);
+  bool eepromInitialized = eepromFormat[0] == 'F' && eepromFormat[1] == 'S' && eepromFormat[2] == 'R' && eepromFormat[3] == 'B';
+  if (!eepromInitialized)
   {
+    Serial.println("INFO:eeprom is not initialized. Setting default values...");
     setDefaults();
     storeValues();
-    return;
   }
   
   byte version = EEPROM.read(4);
 
   if (version < EEPROM_VERSION)
   {
+    Serial.println("INFO:updating old eeprom version...");
     updateEepromFormat(version);
   }
 
   // 1 byte padding
 
-  int eepromAddress = 6;
+  longAverageBufferTime = EEPROMReadLong(6);
+  defaultEndstopMinHighMs = EEPROMReadLong(10);
+  EEPROM.get(14, triggerThreshold);
+  calibrationLedDelay = EEPROMReadLong(16);
+  EEPROM.get(20, i2cSlaveAddress);
 
-  EEPROM.get(eepromAddress, longAverageBufferTime); eepromAddress += sizeof(longAverageBufferTime);
-  EEPROM.get(eepromAddress, defaultEndstopMinHighMs); eepromAddress += sizeof(defaultEndstopMinHighMs);
-  EEPROM.get(eepromAddress, triggerThreshold); eepromAddress += sizeof(triggerThreshold);
-  EEPROM.get(eepromAddress, calibrationLedDelay); eepromAddress += sizeof(calibrationLedDelay);
-  EEPROM.get(eepromAddress, i2cSlaveAddress); eepromAddress += sizeof(i2cSlaveAddress);
+  printSettings();
 }
 
 void Configuration::setDefaults()
@@ -77,14 +82,15 @@ void Configuration::storeValues()
   EEPROM.update(2, 'R');
   EEPROM.update(3, 'B');
   EEPROM.update(4, EEPROM_VERSION);
+  EEPROM.update(5, 0);  // padding
 
   int eepromAddress = 6;
 
-  EEPROM.update(eepromAddress, longAverageBufferTime); eepromAddress += sizeof(longAverageBufferTime);
-  EEPROM.update(eepromAddress, defaultEndstopMinHighMs); eepromAddress += sizeof(defaultEndstopMinHighMs);
-  EEPROM.update(eepromAddress, triggerThreshold); eepromAddress += sizeof(triggerThreshold);
-  EEPROM.update(eepromAddress, calibrationLedDelay); eepromAddress += sizeof(calibrationLedDelay);
-  EEPROM.update(eepromAddress, i2cSlaveAddress); eepromAddress += sizeof(i2cSlaveAddress);
+  EEPROMUpdateLong(6, longAverageBufferTime);
+  EEPROMUpdateLong(10, defaultEndstopMinHighMs);
+  EEPROM.update(14, triggerThreshold);
+  EEPROMUpdateLong(16, calibrationLedDelay);
+  EEPROM.update(20, i2cSlaveAddress);
 }
 
 void Configuration::printSettings()
@@ -110,6 +116,25 @@ void Configuration::updateEepromFormat(byte version)
   //TODO: implement
 }
 
+void Configuration::EEPROMUpdateLong(int address, long value)
+{
+  //Write the 4 bytes into the eeprom memory.
+  EEPROM.update(address, (value & 0xFF));
+  EEPROM.update(address + 1, ((value >> 8) & 0xFF));
+  EEPROM.update(address + 2, ((value >> 16) & 0xFF));
+  EEPROM.update(address + 3, ((value >> 24) & 0xFF));
+}
+
+long Configuration::EEPROMReadLong(long address)
+{
+  long a = EEPROM.read(address);
+  long b = EEPROM.read(address + 1);
+  long c = EEPROM.read(address + 2);
+  long d = EEPROM.read(address + 3);
+
+  return ((a << 0) & 0xFF) + ((b << 8) & 0xFFFF) + ((c << 16) & 0xFFFFFF) + ((d << 24) & 0xFFFFFFFF);
+}      
+
 void Configuration::setKeyValue(String key, String value)
 {
   if (key.equalsIgnoreCase("longAverageBufferTime"))
@@ -133,4 +158,5 @@ void Configuration::setKeyValue(String key, String value)
     i2cSlaveAddress = value.toInt();
   }
 }
+
 

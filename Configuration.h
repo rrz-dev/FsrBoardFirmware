@@ -49,7 +49,9 @@ public:
 
 private:
   static void updateEepromFormat(byte version);
-
+  static void EEPROMUpdateLong(int address, long value);
+  static long EEPROMReadLong(long address);
+  
 private:
   static unsigned long longAverageBufferTime;
   static unsigned long defaultEndstopMinHighMs;

@@ -43,16 +43,16 @@ const int fsrDebugPin[] = { SENSOR1_LED_PIN, SENSOR2_LED_PIN, SENSOR3_LED_PIN };
 
 void setup() 
 {
-  //Configuration::killEEPROM();
-  Configuration::load();
-  
-  Wire.begin(Configuration::getI2cSlaveAddress());
-  Wire.onReceive(receiveEvent);
-  
   Serial.begin(9600);
   while (!Serial) { }
 
   Commands::printFirmwareInfo();
+
+  //Configuration::killEEPROM();
+  Configuration::load();
+
+  Wire.begin(Configuration::getI2cSlaveAddress());
+  Wire.onReceive(receiveEvent);
     
   pinMode(CALIBRATION_SWITCH_PIN, INPUT_PULLUP);
   
