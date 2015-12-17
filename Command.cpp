@@ -19,6 +19,7 @@
 */
 
 #include "Command.h"
+#include "Arduino.h"
 
 Command::Command()
   : lineNumber(-1)
@@ -78,13 +79,11 @@ void Command::print()
   cout << endl;
 */
 
-/*
   Serial.print("DEBUG: Command (line: ");
   Serial.print(lineNumber);
   Serial.print(") ");
   Serial.print((char)commandType);
   Serial.println(commandNumber);
-*/
 }
 
 double Command::getParameterValue(ParameterType parameterType, double defaultValue)

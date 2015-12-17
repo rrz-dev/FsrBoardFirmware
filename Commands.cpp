@@ -52,11 +52,12 @@ void Commands::printSettings()
   Configuration::printSettings();
 }
 
-void Commands::setConfigurationValue(const char* k, const char* v)
+void Commands::setConfigurationValue(const char* k, long v)
 {
-  String key(k);
-  String value(v);
-
-  Configuration::setKeyValue(key, value);
+  Serial.print("INFO:set configuration key '");
+  Serial.print(k);
+  Serial.print("' to value ");
+  Serial.println(v);
+  Configuration::setKeyValue(k, v);
 }
 

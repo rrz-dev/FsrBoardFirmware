@@ -135,27 +135,27 @@ long Configuration::EEPROMReadLong(long address)
   return ((a << 0) & 0xFF) + ((b << 8) & 0xFFFF) + ((c << 16) & 0xFFFFFF) + ((d << 24) & 0xFFFFFFFF);
 }      
 
-void Configuration::setKeyValue(String key, String value)
+void Configuration::setKeyValue(const char* key, long value)
 {
-  if (key.equalsIgnoreCase("longAverageBufferTime"))
+  if (strcasecmp(key,"longAverageBufferTime") == 0)
   {
-    longAverageBufferTime = atol(value.c_str());
+    longAverageBufferTime = value;
   }
-  else if (key.equalsIgnoreCase("defaultEndstopMinHighMs"))
+  else if (strcasecmp(key,"defaultEndstopMinHighMs") == 0)
   {
-    defaultEndstopMinHighMs = atol(value.c_str());
+    defaultEndstopMinHighMs = value;
   }
-  else if (key.equalsIgnoreCase("triggerThreshold"))
+  else if (strcasecmp(key,"triggerThreshold") == 0)
   {
-    triggerThreshold = value.toInt();
+    triggerThreshold = static_cast<int>(value);
   }
-  else if (key.equalsIgnoreCase("calibrationLedDelay"))
+  else if (strcasecmp(key,"calibrationLedDelay") == 0)
   {
-    calibrationLedDelay = atol(value.c_str());
+    calibrationLedDelay = value;
   }
-  else if (key.equalsIgnoreCase("i2cSlaveAddress"))
+  else if (strcasecmp(key,"i2cSlaveAddress") == 0)
   {
-    i2cSlaveAddress = value.toInt();
+    i2cSlaveAddress = static_cast<int>(value);
   }
 }
 

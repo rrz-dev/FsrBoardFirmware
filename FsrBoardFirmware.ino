@@ -107,7 +107,7 @@ void handleMCode(Command c)
       Commands::printSettings();
       break;
     case 800:   // set key value
-      Commands::setConfigurationValue(c.getParameterStringValue(K), c.getParameterStringValue(V));
+      Commands::setConfigurationValue(c.getParameterStringValue(K), c.getParameterValue(V));
       break;
   }
 }

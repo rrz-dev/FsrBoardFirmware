@@ -39,7 +39,7 @@ public:
   static void printSettings();
   static void killEEPROM();
 
-  static void setKeyValue(String key, String value);
+  static void setKeyValue(const char* key, long value);
 
   static unsigned long getLongAverageBufferTime() { return longAverageBufferTime; }
   static unsigned long getDefaultEndstopMinHighMs() { return defaultEndstopMinHighMs; }
