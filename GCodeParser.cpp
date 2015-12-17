@@ -74,7 +74,6 @@ void GCodeParser::parse(const char& c, AddCommandCallback addCommand)
           {
             addCommand(*command);
             command->setCommandType(UNKNOWN);
-            Serial.println("End command 1");
           }
           break;
       }

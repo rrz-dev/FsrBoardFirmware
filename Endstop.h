@@ -37,5 +37,6 @@ private:
   bool isTriggered;
   unsigned long triggeredSince;
   long timeAccu;
+  bool triggeredMessage;
 };
 
