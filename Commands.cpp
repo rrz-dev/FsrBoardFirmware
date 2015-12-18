@@ -26,7 +26,7 @@
 
 void Commands::printFirmwareInfo()
 {
-  Serial.println("INFO:Welcome to FSR board V0.9 Firmware V0.75");
+  Serial.println("INFO:Welcome to FSR board v0.9 Firmware v1-RC1");
 }
 
 void Commands::printEndstopStatus(Endstop endstop)
