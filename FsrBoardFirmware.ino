@@ -29,6 +29,7 @@
 #include "Pins.h"
 #include "Sensor.h"
 #include "SensorLed.h"
+#include "Thermistor.h"
 #include "GCodeParser.h"
 
 Sensor sensor[SENSOR_COUNT] = { Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, SENSOR1_ANALOG_PIN) 
@@ -38,6 +39,7 @@ Sensor sensor[SENSOR_COUNT] = { Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT
 Endstop endstop;
 SensorLed sensorLed;
 GCodeParser parser;
+Thermistor thermistor;
 
 const int fsrDebugPin[] = { SENSOR1_LED_PIN, SENSOR2_LED_PIN, SENSOR3_LED_PIN };
 
@@ -65,6 +67,8 @@ void setup()
 
 void loop() 
 {
+  unsigned long time = millis();
+  
   //
   // update sensors, trigger endstop and handle calibration switch
   //
@@ -76,15 +80,20 @@ void loop()
     {
       sensor[i].reset();
     }
-    sensor[i].update(millis());
+    sensor[i].update(time);
     sensorTriggered |= sensor[i].is_triggered();
   }
-  endstop.update(millis(), sensorTriggered);
+  endstop.update(time, sensorTriggered);
 
   //
   // update sensor debug led display
   //
-  sensorLed.update(millis());
+  sensorLed.update(time);
+
+  //
+  // Thermistor temperature reading and RGB LED output
+  //
+  thermistor.update(time);
 }
 
 void handleMCode(Command c)
