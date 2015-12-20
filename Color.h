@@ -41,6 +41,9 @@ public:
   Color(RGB rgb);
   Color(HSV hsv);
 
+  RGB getRGB() { return rgb; }
+  HSV getHSV() { return hsv; }
+
 private:
   void calcHsv();
   void calcRgb();

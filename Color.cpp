@@ -98,6 +98,59 @@ void Color::calcHsv()
 
 void Color::calcRgb()
 {
-  
+  float hh, p, q, t, ff;
+  long  i;
+
+  if (hsv.s <= 0.0) 
+  {
+    rgb.r = hsv.v;
+    rgb.g = hsv.v;
+    rgb.b = hsv.v;
+    return;
+  }
+    
+  hh = hsv.h;
+  if (hh >= 360.0f) hh = 0.0;
+  hh /= 60.0f;
+  i = static_cast<long>(hh);
+  ff = hh - i;
+  p = hsv.v * (1.0f - hsv.s);
+  q = hsv.v * (1.0f - (hsv.s * ff));
+  t = hsv.v * (1.0f - (hsv.s * (1.0f - ff)));
+
+  switch(i) 
+  {
+    case 0:
+      rgb.r = hsv.v;
+      rgb.g = t;
+      rgb.b = p;
+      break;
+    case 1:
+      rgb.r = q;
+      rgb.g = hsv.v;
+      rgb.b = p;
+      break;
+    case 2:
+      rgb.r = p;
+      rgb.g = hsv.v;
+      rgb.b = t;
+      break;
+    case 3:
+      rgb.r = p;
+      rgb.g = q;
+      rgb.b = hsv.v;
+      break;
+    case 4:
+      rgb.r = t;
+      rgb.g = p;
+      rgb.b = hsv.v;
+      break;
+    case 5:
+    default:
+      rgb.r = hsv.v;
+      rgb.g = p;
+      rgb.b = q;
+      break;
+  }
 }
 
