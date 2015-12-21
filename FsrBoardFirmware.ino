@@ -22,6 +22,7 @@
 #include <Wire.h>
 
 #include "Configuration.h"
+#include "Color.h"
 #include "Command.h"
 #include "Commands.h"
 #include "Endstop.h"
@@ -94,6 +95,17 @@ void loop()
   // Thermistor temperature reading and RGB LED output
   //
   thermistor.update(time);
+
+  float lowTemp = 20.0f;    //TODO: lowTemp have to be a configuration value
+  float highTemp = 120.0f;  //TODO: highTemp have to be a configuration value
+  float divider = highTemp - lowTemp;
+  float t = (thermistor.getCurrentTemperature() - lowTemp) / divider;
+
+  Color cold(0.0f, 0.0f, 1.0f); //TODO: cold color have to be a configuration value
+  Color hot(1.0f, 0.0f, 0.0f);  //TODO: hot color have to be a configuration value
+
+  Color rgbLedColor = cold.interpolate(hot, t, &linearF); //TODO: output color as PWM values for RGB leds
+  
 }
 
 void handleMCode(Command c)

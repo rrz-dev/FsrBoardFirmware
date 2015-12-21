@@ -34,10 +34,7 @@ struct HSV
   float v;
 };
 
-int linearF(float a, float b, float t)
-{
-    return a * (1.0f - t) + b * t;
-}
+int linearF(float a, float b, float t);
 
 class Color
 {

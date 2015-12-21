@@ -22,6 +22,11 @@
 
 #include "Arduino.h"
 
+int linearF(float a, float b, float t)
+{
+    return a * (1.0f - t) + b * t;
+}
+
 Color::Color(float r, float g, float b)
 {
   rgb.r = r;
