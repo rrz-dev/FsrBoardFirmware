@@ -96,13 +96,13 @@ void loop()
   //
   thermistor.update(time);
 
-  float lowTemp = 20.0f;    //TODO: lowTemp have to be a configuration value
-  float highTemp = 120.0f;  //TODO: highTemp have to be a configuration value
+  float lowTemp = Configuration::getColdTemp();
+  float highTemp = Configuration::getHotTemp();
   float divider = highTemp - lowTemp;
   float t = (thermistor.getCurrentTemperature() - lowTemp) / divider;
 
-  Color cold(0.0f, 0.0f, 1.0f); //TODO: cold color have to be a configuration value
-  Color hot(1.0f, 0.0f, 0.0f);  //TODO: hot color have to be a configuration value
+  Color cold(Configuration::getColdR()/255.0f, Configuration::getColdG()/255.0f, Configuration::getColdB()/255.0f);
+  Color hot(Configuration::getHotR()/255.0f, Configuration::getHotG()/255.0f, Configuration::getHotB()/255.0f);
 
   Color rgbLedColor = cold.interpolate(hot, t, &linearF); //TODO: output color as PWM values for RGB leds
   

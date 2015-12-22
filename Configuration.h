@@ -25,7 +25,7 @@
 #define SENSOR_COUNT						          3
 #define DEFAULT_LONG_AVERAGE_BUFFER_SIZE	16
 #define DEFAULT_SHORT_AVERAGE_BUFFER_SIZE	4
-#define EEPROM_VERSION                    0
+#define EEPROM_VERSION                    1
 
 class Configuration
 {
@@ -46,6 +46,15 @@ public:
   static uint16_t getTriggerThreshold() { return triggerThreshold; }
   static unsigned long getCalibrationLedDelay() { return calibrationLedDelay; }
   static byte getI2cSlaveAddress() { return i2cSlaveAddress; }
+  static byte getColdTemp() { return coldTemp; }
+  static byte getHotTemp() { return hotTemp; }
+  static byte getAlarmTemp() { return alarmTemp; }
+  static byte getColdR() { return coldR; }
+  static byte getColdG() { return coldG; }
+  static byte getColdB() { return coldB; }
+  static byte getHotR() { return hotR; }
+  static byte getHotG() { return hotG; }
+  static byte getHotB() { return hotB; }
 
 private:
   static void updateEepromFormat(byte version);
@@ -60,5 +69,14 @@ private:
   static uint16_t triggerThreshold;
   static unsigned long calibrationLedDelay;
   static byte i2cSlaveAddress;
+  static byte coldTemp;
+  static byte hotTemp;
+  static byte alarmTemp;
+  static byte coldR;
+  static byte coldG;
+  static byte coldB;
+  static byte hotR;
+  static byte hotG;
+  static byte hotB;
 };
 

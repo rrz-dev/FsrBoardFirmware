@@ -19,3 +19,12 @@ For setting configuration values use the M800 M-Code. It has two argument types:
 * triggerThreshold (default: 14) - this is the minimum differenc between the current sensor reading and the average sensor reading for triggering the endstop out
 * calibrationLedDelay (default: 250) - this is the delay in milliseconds for the blinking leds when calibrating the sensor board after a reset
 * i2cSlaveAddress (default: 77) - slave address which is used to listen for messages on the i2c bus
+* coldTemp (default: 20) - cold temperature thermistor reading for RGB color interpolation to show heatbed temperature
+* hotTemp (default: 120) - hot temperature thermistor reading for RGB color interpolation to show heatbed temperature
+* alarmTemp (default: 160) - color to reach before triggering alarm out
+* coldR (default: 0) - red component of cold temperature color
+* coldG (default: 0) - green component of cold temperature color
+* coldB (default: 255) - blue component of cold temperature color
+* hotR (default: 255) - red component of hot temperature color
+* hotG (default: 0) - green component of hot temperature color
+* hotB (default: 0) - blue component of hot temperature color

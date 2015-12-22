@@ -27,7 +27,16 @@ unsigned long Configuration::defaultEndstopMinHighMs;
 uint16_t Configuration::triggerThreshold;
 unsigned long Configuration::calibrationLedDelay;
 byte Configuration::i2cSlaveAddress;
-
+byte Configuration::coldTemp;
+byte Configuration::hotTemp;
+byte Configuration::alarmTemp;
+byte Configuration::coldR;
+byte Configuration::coldG;
+byte Configuration::coldB;
+byte Configuration::hotR;
+byte Configuration::hotG;
+byte Configuration::hotB;
+  
 Configuration::Configuration()
 {
   setDefaults();
@@ -63,6 +72,17 @@ void Configuration::load()
   calibrationLedDelay = EEPROMReadLong(16);
   EEPROM.get(20, i2cSlaveAddress);
 
+  // version 1
+  EEPROM.get(21, coldTemp);
+  EEPROM.get(22, hotTemp);
+  EEPROM.get(23, alarmTemp);
+  EEPROM.get(24, coldR);
+  EEPROM.get(25, coldG);
+  EEPROM.get(26, coldB);
+  EEPROM.get(27, hotR);
+  EEPROM.get(28, hotG);
+  EEPROM.get(29, hotB);  
+
   printSettings();
 }
 
@@ -73,6 +93,15 @@ void Configuration::setDefaults()
   triggerThreshold = 14;
   calibrationLedDelay = 250;
   i2cSlaveAddress = 77;
+  coldTemp = 20;
+  hotTemp = 120;
+  alarmTemp = 160;
+  coldR = 0;
+  coldG = 0;
+  coldB = 255;
+  hotR = 255;
+  hotG = 0;
+  hotB = 0;
 }
 
 void Configuration::storeValues()
@@ -91,8 +120,18 @@ void Configuration::storeValues()
   EEPROMUpdateInt16(14, triggerThreshold);
   EEPROMUpdateLong(16, calibrationLedDelay);
   EEPROM.update(20, i2cSlaveAddress);
-}
 
+  // version 1
+  EEPROM.update(21, coldTemp);
+  EEPROM.update(22, hotTemp);
+  EEPROM.update(23, alarmTemp);
+  EEPROM.update(24, coldR);
+  EEPROM.update(25, coldG);
+  EEPROM.update(26, coldB);
+  EEPROM.update(27, hotR);
+  EEPROM.update(28, hotG);
+  EEPROM.update(29, hotB);
+}
 void Configuration::printSettings()
 {
   Serial.print("INFO:FSR board configuration version ");Serial.println(EEPROM_VERSION);
@@ -101,6 +140,15 @@ void Configuration::printSettings()
   Serial.print("INFO:triggerThreshold=");               Serial.println(triggerThreshold);
   Serial.print("INFO:calibrationLedDelay=");            Serial.println(calibrationLedDelay);
   Serial.print("INFO:i2cSlaveAddress=");                Serial.println(i2cSlaveAddress);
+  Serial.print("INFO:coldTemp=");                       Serial.println(coldTemp);
+  Serial.print("INFO:hotTemp=");                        Serial.println(hotTemp);
+  Serial.print("INFO:alarmTemp=");                      Serial.println(alarmTemp);
+  Serial.print("INFO:coldR=");                          Serial.println(coldR);
+  Serial.print("INFO:coldG=");                          Serial.println(coldG);
+  Serial.print("INFO:coldB=");                          Serial.println(coldB);
+  Serial.print("INFO:hotR=");                           Serial.println(hotR);
+  Serial.print("INFO:hotG=");                           Serial.println(hotG);
+  Serial.print("INFO:hotB=");                           Serial.println(hotB);
 }
 
 void Configuration::killEEPROM()
@@ -113,7 +161,20 @@ void Configuration::killEEPROM()
 
 void Configuration::updateEepromFormat(byte version)
 {
-  //TODO: implement
+  if (version == 0 && EEPROM_VERSION == 1)
+  {
+    EEPROM.update(4, EEPROM_VERSION); // new version
+    
+    EEPROM.update(21, 20);  // coldTemp
+    EEPROM.update(22, 120); // hotTemp
+    EEPROM.update(23, 160); // alarmTemp
+    EEPROM.update(24, 0);   // coldR
+    EEPROM.update(25, 0);   // coldG
+    EEPROM.update(26, 255); // coldB
+    EEPROM.update(27, 255); // hotR
+    EEPROM.update(28, 0);   // hotG
+    EEPROM.update(29, 0);   // hotB
+  }
 }
 
 void Configuration::EEPROMUpdateLong(int address, long value)
@@ -170,8 +231,45 @@ void Configuration::setKeyValue(const char* key, long value)
   }
   else if (strcasecmp(key,"i2cSlaveAddress") == 0)
   {
-    i2cSlaveAddress = static_cast<int>(value);
+    i2cSlaveAddress = static_cast<byte>(value);
   }
+  else if (strcasecmp(key,"coldTemp") == 0)
+  {
+    coldTemp = static_cast<byte>(value);
+  }
+  else if (strcasecmp(key,"hotTemp") == 0)
+  {
+    hotTemp = static_cast<byte>(value);
+  }
+  else if (strcasecmp(key,"alarmTemp") == 0)
+  {
+    alarmTemp = static_cast<byte>(value);
+  }
+  else if (strcasecmp(key,"coldR") == 0)
+  {
+    coldR = static_cast<byte>(value);
+  }
+  else if (strcasecmp(key,"coldG") == 0)
+  {
+    coldG = static_cast<byte>(value);
+  }
+  else if (strcasecmp(key,"coldB") == 0)
+  {
+    coldB = static_cast<byte>(value);
+  }
+  else if (strcasecmp(key,"hotR") == 0)
+  {
+    hotR = static_cast<byte>(value);
+  }
+  else if (strcasecmp(key,"hotG") == 0)
+  {
+    hotG = static_cast<byte>(value);
+  }
+  else if (strcasecmp(key,"hotB") == 0)
+  {
+    hotB = static_cast<byte>(value);
+  }
+  
 }
 
 
