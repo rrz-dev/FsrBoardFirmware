@@ -59,7 +59,7 @@ void Configuration::load()
 
   longAverageBufferTime = EEPROMReadLong(6);
   defaultEndstopMinHighMs = EEPROMReadLong(10);
-  EEPROM.get(14, triggerThreshold);
+  triggerThreshold = EEPROMReadInt16(14);
   calibrationLedDelay = EEPROMReadLong(16);
   EEPROM.get(20, i2cSlaveAddress);
 
@@ -88,7 +88,7 @@ void Configuration::storeValues()
 
   EEPROMUpdateLong(6, longAverageBufferTime);
   EEPROMUpdateLong(10, defaultEndstopMinHighMs);
-  EEPROM.update(14, triggerThreshold);
+  EEPROMUpdateInt16(14, triggerThreshold);
   EEPROMUpdateLong(16, calibrationLedDelay);
   EEPROM.update(20, i2cSlaveAddress);
 }
@@ -135,6 +135,21 @@ long Configuration::EEPROMReadLong(long address)
   return ((a << 0) & 0xFF) + ((b << 8) & 0xFFFF) + ((c << 16) & 0xFFFFFF) + ((d << 24) & 0xFFFFFFFF);
 }      
 
+void Configuration::EEPROMUpdateInt16(int address, uint16_t value)
+{
+  //Write the 2 bytes into the eeprom memory.
+  EEPROM.update(address, (value & 0xFF));
+  EEPROM.update(address + 1, ((value >> 8) & 0xFF));
+}
+  
+long Configuration::EEPROMReadInt16(long address)
+{
+  long a = EEPROM.read(address);
+  long b = EEPROM.read(address + 1);
+
+  return ((a << 0) & 0xFF) + ((b << 8) & 0xFFFF);
+}
+
 void Configuration::setKeyValue(const char* key, long value)
 {
   if (strcasecmp(key,"longAverageBufferTime") == 0)
@@ -147,7 +162,7 @@ void Configuration::setKeyValue(const char* key, long value)
   }
   else if (strcasecmp(key,"triggerThreshold") == 0)
   {
-    triggerThreshold = static_cast<int>(value);
+    triggerThreshold = static_cast<uint16_t>(value);
   }
   else if (strcasecmp(key,"calibrationLedDelay") == 0)
   {

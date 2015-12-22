@@ -51,6 +51,8 @@ private:
   static void updateEepromFormat(byte version);
   static void EEPROMUpdateLong(int address, long value);
   static long EEPROMReadLong(long address);
+  static void EEPROMUpdateInt16(int address, uint16_t value);
+  static long EEPROMReadInt16(long address);
   
 private:
   static unsigned long longAverageBufferTime;
