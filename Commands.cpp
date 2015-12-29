@@ -27,60 +27,60 @@
 
 void Commands::printDiagnose(Sensor& s0, Sensor& s1, Sensor& s2)
 {
-  Serial.println(PSTR("INFO:diagnostic information"));
+  Serial.println(F("INFO:diagnostic information"));
   
-  Serial.println(PSTR("INFO:sensor 0"));
-  Serial.print(PSTR("INFO:is_triggered: "));
+  Serial.println(F("INFO:sensor 0"));
+  Serial.print(F("INFO:is_triggered: "));
   Serial.print(s0.is_triggered());
-  Serial.print(PSTR(" is_calibrating: "));
+  Serial.print(F(" is_calibrating: "));
   Serial.println(s0.is_calibrating());
-  Serial.print(PSTR("INFO:short_average: "));
+  Serial.print(F("INFO:short_average: "));
   Serial.print(s0.shortAverage());
-  Serial.print(PSTR(" long_average: "));
+  Serial.print(F(" long_average: "));
   Serial.println(s0.longAverage());
   
-  Serial.println(PSTR("INFO:sensor 1"));
-  Serial.print(PSTR("INFO:is_triggered: "));
+  Serial.println(F("INFO:sensor 1"));
+  Serial.print(F("INFO:is_triggered: "));
   Serial.print(s1.is_triggered());
-  Serial.print(PSTR(" is_calibrating: "));
+  Serial.print(F(" is_calibrating: "));
   Serial.println(s1.is_calibrating());
-  Serial.print(PSTR("INFO:short_average: "));
+  Serial.print(F("INFO:short_average: "));
   Serial.print(s1.shortAverage());
-  Serial.print(PSTR(" long_average: "));
+  Serial.print(F(" long_average: "));
   Serial.println(s1.longAverage());
 
-  Serial.println(PSTR("INFO:sensor 2"));
-  Serial.print(PSTR("INFO:is_triggered: "));
+  Serial.println(F("INFO:sensor 2"));
+  Serial.print(F("INFO:is_triggered: "));
   Serial.print(s2.is_triggered());
-  Serial.print(PSTR(" is_calibrating: "));
+  Serial.print(F(" is_calibrating: "));
   Serial.println(s2.is_calibrating());
-  Serial.print(PSTR("INFO:short_average: "));
+  Serial.print(F("INFO:short_average: "));
   Serial.print(s2.shortAverage());
-  Serial.print(PSTR(" long_average: "));
+  Serial.print(F(" long_average: "));
   Serial.println(s2.longAverage());
 }
 
 void Commands::printFirmwareInfo()
 {
-  Serial.println(PSTR("INFO:Welcome to FSR board Firmware v1-RC1"));
+  Serial.println(F("INFO:Welcome to FSR board Firmware v1-RC1"));
 }
 
 void Commands::printEndstopStatus(Endstop endstop)
 {
-  Serial.print(PSTR("INFO:endstop out status: "));
+  Serial.print(F("INFO:endstop out status: "));
   Serial.println(endstop.is_triggered());
 }
 
 void Commands::factorySettings()
 {
   Configuration::setDefaults();
-  Serial.println(PSTR("INFO:reverted to factory settings, but not stored in EEPROM"));
+  Serial.println(F("INFO:reverted to factory settings, but not stored in EEPROM"));
 }
 
 void Commands::storeSettings()
 {
   Configuration::storeValues();
-  Serial.println(PSTR("INFO:stored settings to EEPROM"));
+  Serial.println(F("INFO:stored settings to EEPROM"));
 }
 
 void Commands::printSettings()
@@ -90,9 +90,9 @@ void Commands::printSettings()
 
 void Commands::setConfigurationValue(const char* k, long v)
 {
-  Serial.print(PSTR("INFO:set configuration key '"));
+  Serial.print(F("INFO:set configuration key '"));
   Serial.print(k);
-  Serial.print(PSTR("' to value "));
+  Serial.print(F("' to value "));
   Serial.println(v);
   Configuration::setKeyValue(k, v);
 }

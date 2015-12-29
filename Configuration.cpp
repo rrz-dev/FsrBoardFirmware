@@ -35,14 +35,14 @@ Configuration::Configuration()
 
 void Configuration::load()
 {
-  Serial.println(PSTR("INFO:loading eeprom configuration..."));
+  Serial.println(F("INFO:loading eeprom configuration..."));
   
   char eepromFormat[4];
   EEPROM.get(0, eepromFormat);
   bool eepromInitialized = eepromFormat[0] == 'F' && eepromFormat[1] == 'S' && eepromFormat[2] == 'R' && eepromFormat[3] == 'B';
   if (!eepromInitialized)
   {
-    Serial.println(PSTR("INFO:eeprom is not initialized. Setting default values..."));
+    Serial.println(F("INFO:eeprom is not initialized. Setting default values..."));
     setDefaults();
     storeValues();
   }
@@ -51,7 +51,7 @@ void Configuration::load()
 
   if (version < EEPROM_VERSION)
   {
-    Serial.println(PSTR("INFO:updating old eeprom version..."));
+    Serial.println(F("INFO:updating old eeprom version..."));
     updateEepromFormat(version);
   }
 
@@ -95,12 +95,12 @@ void Configuration::storeValues()
 
 void Configuration::printSettings()
 {
-  Serial.print(PSTR("INFO:FSR board configuration version "));Serial.println(EEPROM_VERSION);
-  Serial.print(PSTR("INFO:longAverageBufferTime="));          Serial.println(longAverageBufferTime);
-  Serial.print(PSTR("INFO:defaultEndstopMinHighMs="));        Serial.println(defaultEndstopMinHighMs);  
-  Serial.print(PSTR("INFO:triggerThreshold="));               Serial.println(triggerThreshold);
-  Serial.print(PSTR("INFO:calibrationLedDelay="));            Serial.println(calibrationLedDelay);
-  Serial.print(PSTR("INFO:i2cSlaveAddress="));                Serial.println(i2cSlaveAddress);
+  Serial.print(F("INFO:FSR board configuration version "));Serial.println(EEPROM_VERSION);
+  Serial.print(F("INFO:longAverageBufferTime="));          Serial.println(longAverageBufferTime);
+  Serial.print(F("INFO:defaultEndstopMinHighMs="));        Serial.println(defaultEndstopMinHighMs);  
+  Serial.print(F("INFO:triggerThreshold="));               Serial.println(triggerThreshold);
+  Serial.print(F("INFO:calibrationLedDelay="));            Serial.println(calibrationLedDelay);
+  Serial.print(F("INFO:i2cSlaveAddress="));                Serial.println(i2cSlaveAddress);
 }
 
 void Configuration::killEEPROM()

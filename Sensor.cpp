@@ -39,10 +39,10 @@ Sensor::~Sensor()
 void Sensor::createBuffer(size_t longAverageBufferSize, size_t shortAverageBufferSize)
 {
   delete longAverageBuffer;
-  longAverageBuffer = new CircularBuffer<uint16_t>(longAverageBufferSize);
+  longAverageBuffer = new CircularBuffer<int>(longAverageBufferSize);
 
   delete shortAverageBuffer;
-  shortAverageBuffer = new CircularBuffer<uint16_t>(shortAverageBufferSize);
+  shortAverageBuffer = new CircularBuffer<int>(shortAverageBufferSize);
 }
 
 void Sensor::update(unsigned long time)
@@ -63,9 +63,11 @@ void Sensor::update(unsigned long time)
 
 bool Sensor::is_triggered()
 {
-  uint16_t v = static_cast<uint16_t>(labs(longAverageBuffer->average() - shortAverageBuffer->average()));
+  if (is_calibrating()) return false;
   
-  return v >= Configuration::getTriggerThreshold();
+  int v = min(abs(shortAverageBuffer->average() - longAverageBuffer->average()), 1024);
+
+  return v >= static_cast<int>(Configuration::getTriggerThreshold());
 }
 
 void Sensor::reset()
@@ -81,13 +83,13 @@ bool Sensor::is_calibrating()
   return longAverageBuffer->currentElementCount() < longAverageBuffer->bufferSize();
 }
 
-uint16_t Sensor::longAverage()
+int Sensor::longAverage()
 {
-  return longAverageBuffer->average();
+  return min(longAverageBuffer->average(), 1024);
 }
 
-uint16_t Sensor::shortAverage()
+int Sensor::shortAverage()
 {
-  return shortAverageBuffer->average();
+  return min(shortAverageBuffer->average(), 1024);
 }
 

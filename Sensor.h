@@ -37,15 +37,15 @@ public:
 
   bool is_calibrating();
 
-  uint16_t longAverage();
-  uint16_t shortAverage();
+  int longAverage();
+  int shortAverage();
   
 private:
   void createBuffer(size_t longAverageBufferSize, size_t shortAverageBufferSize);
 
 private:
-  CircularBuffer<uint16_t>* longAverageBuffer;
-  CircularBuffer<uint16_t>* shortAverageBuffer;
+  CircularBuffer<int>* longAverageBuffer;
+  CircularBuffer<int>* shortAverageBuffer;
   unsigned long lastTime;
   unsigned long timeAccu;
   unsigned long longAverageThreshold;
