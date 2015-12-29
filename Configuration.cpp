@@ -44,14 +44,14 @@ Configuration::Configuration()
 
 void Configuration::load()
 {
-  Serial.println("INFO:loading eeprom configuration...");
+  Serial.println(PSTR("INFO:loading eeprom configuration..."));
   
   char eepromFormat[4];
   EEPROM.get(0, eepromFormat);
   bool eepromInitialized = eepromFormat[0] == 'F' && eepromFormat[1] == 'S' && eepromFormat[2] == 'R' && eepromFormat[3] == 'B';
   if (!eepromInitialized)
   {
-    Serial.println("INFO:eeprom is not initialized. Setting default values...");
+    Serial.println(PSTR("INFO:eeprom is not initialized. Setting default values..."));
     setDefaults();
     storeValues();
   }
@@ -60,7 +60,7 @@ void Configuration::load()
 
   if (version < EEPROM_VERSION)
   {
-    Serial.println("INFO:updating old eeprom version...");
+    Serial.println(PSTR("INFO:updating old eeprom version..."));
     updateEepromFormat(version);
   }
 
@@ -134,21 +134,21 @@ void Configuration::storeValues()
 }
 void Configuration::printSettings()
 {
-  Serial.print("INFO:FSR board configuration version ");Serial.println(EEPROM_VERSION);
-  Serial.print("INFO:longAverageBufferTime=");          Serial.println(longAverageBufferTime);
-  Serial.print("INFO:defaultEndstopMinHighMs=");        Serial.println(defaultEndstopMinHighMs);  
-  Serial.print("INFO:triggerThreshold=");               Serial.println(triggerThreshold);
-  Serial.print("INFO:calibrationLedDelay=");            Serial.println(calibrationLedDelay);
-  Serial.print("INFO:i2cSlaveAddress=");                Serial.println(i2cSlaveAddress);
-  Serial.print("INFO:coldTemp=");                       Serial.println(coldTemp);
-  Serial.print("INFO:hotTemp=");                        Serial.println(hotTemp);
-  Serial.print("INFO:alarmTemp=");                      Serial.println(alarmTemp);
-  Serial.print("INFO:coldR=");                          Serial.println(coldR);
-  Serial.print("INFO:coldG=");                          Serial.println(coldG);
-  Serial.print("INFO:coldB=");                          Serial.println(coldB);
-  Serial.print("INFO:hotR=");                           Serial.println(hotR);
-  Serial.print("INFO:hotG=");                           Serial.println(hotG);
-  Serial.print("INFO:hotB=");                           Serial.println(hotB);
+  Serial.print(PSTR("INFO:FSR board configuration version "));Serial.println(EEPROM_VERSION);
+  Serial.print(PSTR("INFO:longAverageBufferTime="));          Serial.println(longAverageBufferTime);
+  Serial.print(PSTR("INFO:defaultEndstopMinHighMs="));        Serial.println(defaultEndstopMinHighMs);  
+  Serial.print(PSTR("INFO:triggerThreshold="));               Serial.println(triggerThreshold);
+  Serial.print(PSTR("INFO:calibrationLedDelay="));            Serial.println(calibrationLedDelay);
+  Serial.print(PSTR("INFO:i2cSlaveAddress="));                Serial.println(i2cSlaveAddress);
+  Serial.print(PSTR("INFO:coldTemp="));                       Serial.println(coldTemp);
+  Serial.print(PSTR("INFO:hotTemp="));                        Serial.println(hotTemp);
+  Serial.print(PSTR("INFO:alarmTemp="));                      Serial.println(alarmTemp);
+  Serial.print(PSTR("INFO:coldR="));                          Serial.println(coldR);
+  Serial.print(PSTR("INFO:coldG="));                          Serial.println(coldG);
+  Serial.print(PSTR("INFO:coldB="));                          Serial.println(coldB);
+  Serial.print(PSTR("INFO:hotR="));                           Serial.println(hotR);
+  Serial.print(PSTR("INFO:hotG="));                           Serial.println(hotG);
+  Serial.print(PSTR("INFO:hotB="));                           Serial.println(hotB);
 }
 
 void Configuration::killEEPROM()
