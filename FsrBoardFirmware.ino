@@ -77,7 +77,7 @@ void loop()
       sensor[i].reset();
     }
     sensor[i].update(millis());
-    sensorTriggered |= sensor[i].is_triggered();
+    sensorTriggered |= sensor[i].is_triggered() && !sensor[i].is_calibrating();
   }
   endstop.update(millis(), sensorTriggered);
 
