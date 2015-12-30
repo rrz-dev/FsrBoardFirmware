@@ -82,7 +82,7 @@ void SensorLed::update(unsigned long time)
 	case SLS_MONITORING:
 		for (size_t i = 0; i < sensorCount; i++)
 		{
-      uint16_t scaledAvg = map(sensors[i]->shortAverage(), sensors[i]->longAverage(), 1023, 0, 255);
+      int scaledAvg = map(abs(sensors[i]->shortAverage() - sensors[i]->longAverage()), 0, 1023, 0, 255);
 			analogWrite(sensorLed[i], scaledAvg);
 		}
 

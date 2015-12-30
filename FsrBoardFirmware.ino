@@ -82,7 +82,7 @@ void loop()
       sensor[i].reset();
     }
     sensor[i].update(time);
-    sensorTriggered |= sensor[i].is_triggered() && !sensor[i].is_calibrating();
+    sensorTriggered |= sensor[i].is_triggered();
   }
   endstop.update(time, sensorTriggered);
 

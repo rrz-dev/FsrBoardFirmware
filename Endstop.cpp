@@ -43,7 +43,12 @@ void Endstop::update(unsigned long time, bool triggered)
     endstopHigh();
     timeAccu = Configuration::getDefaultEndstopMinHighMs();
   }
-  else if (isTriggered)
+  else if (isTriggered && triggered)
+  {
+    timeAccu = Configuration::getDefaultEndstopMinHighMs();
+  }
+  
+  if (isTriggered)
   {
     timeAccu -= deltaTime;
     // endstop is no longer triggered
