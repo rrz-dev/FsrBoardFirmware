@@ -25,6 +25,8 @@
 #include "Arduino.h"
 
 Thermistor::Thermistor()
+  : currentTemp(20.0f)
+  , resistance(0)
 {
   
 }
@@ -40,14 +42,19 @@ float Thermistor::getCurrentTemperature()
   return currentTemp;
 }
 
+long Thermistor::getRawResistance()
+{
+  return resistance;
+}
+
 float Thermistor::calc(int rawAdc)
 {
-  float vcc = 5;          // only used for display purposes, if used set to the measured Vcc.
-  float pad = 10000;      // balance/pad resistor value, set this to the measured resistance of your pad resistor
+  float vcc = 3.3f;       // only used for display purposes, if used set to the measured Vcc.
+  float pad = 100000;     // balance/pad resistor value, set this to the measured resistance of your pad resistor
   float thermr = 100000;  // thermistor nominal resistance
 
-  long resistance = pad * ((1024.0 / rawAdc) - 1); 
-  float temp = log(resistance); // Saving the Log(resistance) so not to calculate  it 4 times later
+  resistance = pad * ((1024.0 / rawAdc) - 1); 
+  float temp = log(resistance); // Saving the Log(resistance) so not to calculate it 4 times later
   temp = 1 / (0.001129148 + (0.000234125 * temp) + (0.0000000876741 * temp * temp * temp));
   temp = temp - 273.15;  // Convert Kelvin to Celsius
 

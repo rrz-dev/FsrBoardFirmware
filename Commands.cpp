@@ -21,11 +21,12 @@
 #include "Commands.h"
 #include "Endstop.h"
 #include "Sensor.h"
+#include "Thermistor.h"
 #include "Configuration.h"
 
 #include <Arduino.h>
 
-void Commands::printDiagnose(Sensor& s0, Sensor& s1, Sensor& s2)
+void Commands::printDiagnose(Sensor& s0, Sensor& s1, Sensor& s2, Thermistor& therm)
 {
   Serial.println(F("INFO:diagnostic information"));
   
@@ -58,6 +59,12 @@ void Commands::printDiagnose(Sensor& s0, Sensor& s1, Sensor& s2)
   Serial.print(s2.shortAverage());
   Serial.print(F(" long_average: "));
   Serial.println(s2.longAverage());
+
+  Serial.println(F("INFO:thermistor"));
+  Serial.print(F("INFO:raw resistance: "));
+  Serial.println(therm.getRawResistance());
+  Serial.print(F("INFO:temperature: "));
+  Serial.println(therm.getCurrentTemperature());
 }
 
 void Commands::printFirmwareInfo()

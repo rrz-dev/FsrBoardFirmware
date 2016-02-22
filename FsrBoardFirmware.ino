@@ -113,7 +113,7 @@ void handleMCode(Command c)
   switch (c.getCommandCode())
   {
     case 112:   // diagnose
-      Commands::printDiagnose(sensor[0], sensor[1], sensor[2]);
+      Commands::printDiagnose(sensor[0], sensor[1], sensor[2], thermistor);
       break;
     case 115:   // get firmware version and capabilities
       Commands::printFirmwareInfo();

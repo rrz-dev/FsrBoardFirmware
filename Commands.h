@@ -22,11 +22,12 @@
 
 class Endstop;
 class Sensor;
+class Thermistor;
 
 class Commands
 {
 public:
-  static void printDiagnose(Sensor& s0, Sensor& s1, Sensor& s2);
+  static void printDiagnose(Sensor& s0, Sensor& s1, Sensor& s2, Thermistor& therm);
   static void printFirmwareInfo();
   static void printEndstopStatus(Endstop endstop);
   static void factorySettings();

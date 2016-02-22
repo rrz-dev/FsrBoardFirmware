@@ -27,11 +27,13 @@ public:
 
   void update(unsigned long time);
   float getCurrentTemperature();
+  long getRawResistance();
 
 private:
   float calc(int rawAdc);
 
 private:
   float currentTemp;
+  long resistance;
 };
 
