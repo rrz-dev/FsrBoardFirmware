@@ -30,6 +30,7 @@ Endstop::Endstop()
   , triggeredMessage(false)
 {
   pinMode(ENDSTOP_OUT_PIN, OUTPUT);
+  digitalWrite(ENDSTOP_OUT_PIN, HIGH);
 }
 
 void Endstop::update(unsigned long time, bool triggered)
@@ -69,14 +70,14 @@ void Endstop::endstopHigh()
     Serial.println("INFO:triggering endstop out");
     triggeredMessage = true;
   }
-  digitalWrite(ENDSTOP_OUT_PIN, HIGH);
+  digitalWrite(ENDSTOP_OUT_PIN, LOW);
   //TODO: INVERT!!!
 }
 
 void Endstop::endstopLow()
 {
   triggeredMessage = false;
-  digitalWrite(ENDSTOP_OUT_PIN, LOW);
+  digitalWrite(ENDSTOP_OUT_PIN, HIGH);
   //TODO: INVERT!!!
 }
 
