@@ -55,6 +55,7 @@ public:
   static byte getHotR() { return hotR; }
   static byte getHotG() { return hotG; }
   static byte getHotB() { return hotB; }
+  static boolean getEndstopHighActive() { return endstopHighActive > 0; }
 
 private:
   static void updateEepromFormat(byte version);
@@ -78,5 +79,6 @@ private:
   static byte hotR;
   static byte hotG;
   static byte hotB;
+  static byte endstopHighActive;
 };
 

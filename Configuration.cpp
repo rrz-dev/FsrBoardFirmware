@@ -36,6 +36,7 @@ byte Configuration::coldB;
 byte Configuration::hotR;
 byte Configuration::hotG;
 byte Configuration::hotB;
+byte Configuration::endstopHighActive;
   
 Configuration::Configuration()
 {
@@ -82,6 +83,7 @@ void Configuration::load()
   EEPROM.get(27, hotR);
   EEPROM.get(28, hotG);
   EEPROM.get(29, hotB);  
+  EEPROM.get(30, endstopHighActive);
 
   printSettings();
 }
@@ -102,6 +104,7 @@ void Configuration::setDefaults()
   hotR = 255;
   hotG = 0;
   hotB = 0;
+  endstopHighActive = 0;
 }
 
 void Configuration::storeValues()
@@ -131,6 +134,7 @@ void Configuration::storeValues()
   EEPROM.update(27, hotR);
   EEPROM.update(28, hotG);
   EEPROM.update(29, hotB);
+  EEPROM.update(30, endstopHighActive);
 }
 void Configuration::printSettings()
 {
@@ -149,6 +153,7 @@ void Configuration::printSettings()
   Serial.print(F("INFO:hotR="));                           Serial.println(hotR);
   Serial.print(F("INFO:hotG="));                           Serial.println(hotG);
   Serial.print(F("INFO:hotB="));                           Serial.println(hotB);
+  Serial.print(F("INFO:endstopHighActive="));              Serial.println(endstopHighActive);
 }
 
 void Configuration::killEEPROM()
@@ -174,6 +179,7 @@ void Configuration::updateEepromFormat(byte version)
     EEPROM.update(27, 255); // hotR
     EEPROM.update(28, 0);   // hotG
     EEPROM.update(29, 0);   // hotB
+    EEPROM.update(30, 0);   // endstopHighActive
   }
 }
 
@@ -269,7 +275,9 @@ void Configuration::setKeyValue(const char* key, long value)
   {
     hotB = static_cast<byte>(value);
   }
-  
+  else if (strcasecmp(key,"endstopHighActive") == 0)
+  {
+    endstopHighActive = static_cast<byte>(value);
+  }
 }
-
 

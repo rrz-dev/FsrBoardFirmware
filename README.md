@@ -29,3 +29,4 @@ For setting configuration values use the M800 M-Code. It has two argument types:
 * hotR (default: 255) - red component of hot temperature color
 * hotG (default: 0) - green component of hot temperature color
 * hotB (default: 0) - blue component of hot temperature color
+* endstopHighActive (default: 0) - when value is greater than 0, the endstop trigger logic is inverted
