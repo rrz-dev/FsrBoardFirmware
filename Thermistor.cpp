@@ -41,7 +41,7 @@ float Thermistor::getCurrentTemperature()
   return currentTemp;
 }
 
-long Thermistor::getRawResistance()
+float Thermistor::getRawResistance()
 {
   return resistance;
 }
@@ -62,8 +62,8 @@ float Thermistor::calc(int rawAdc)
 */
 
   // convert the value to resistance
-  resistance = 1023 / rawAdc - 1;
-  resistance = 100000 / resistance;                                       // 100000 -> R10 resistor on FSR board
+  resistance = 1023.0f / static_cast<float>(rawAdc - 1);
+  resistance = 100000.0f / resistance;                                    // 100000 -> R10 resistor on FSR board
  
   float steinhart = resistance / Configuration::getThermistorNominal();   // (R/Ro)
   steinhart = log(steinhart);                                             // ln(R/Ro)
