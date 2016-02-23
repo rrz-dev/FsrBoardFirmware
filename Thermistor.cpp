@@ -34,7 +34,6 @@ Thermistor::Thermistor()
 void Thermistor::update(unsigned long time)
 {
   currentTemp = calc(analogRead(THERMISTOR_ANALOG_PIN));
-  
 }
 
 float Thermistor::getCurrentTemperature()
@@ -63,16 +62,15 @@ float Thermistor::calc(int rawAdc)
 */
 
   // convert the value to resistance
-  rawAdc = 1023 / rawAdc - 1;
-  resistance = 100000 / rawAdc;                                         // 100000 -> R10 resistor on FSR board
+  resistance = 1023 / rawAdc - 1;
+  resistance = 100000 / resistance;                                       // 100000 -> R10 resistor on FSR board
  
-  float steinhart;
-  steinhart = resistance / Configuration::getThermistorNominal();       // (R/Ro)
-  steinhart = log(steinhart);                                           // ln(R/Ro)
-  steinhart /= Configuration::getThermistorBeta();                      // 1/B * ln(R/Ro)
-  steinhart += 1.0 / (Configuration::getTemperatureNominal() + 273.15); // + (1/To)
-  steinhart = 1.0 / steinhart;                                          // Invert
-  steinhart -= 273.15;                                                  // convert to C
+  float steinhart = resistance / Configuration::getThermistorNominal();   // (R/Ro)
+  steinhart = log(steinhart);                                             // ln(R/Ro)
+  steinhart /= Configuration::getThermistorBeta();                        // 1/B * ln(R/Ro)
+  steinhart += 1.0f / (Configuration::getTemperatureNominal() + 273.15f); // + (1/To)
+  steinhart = 1.0f / steinhart;                                           // Invert
+  steinhart -= 273.15f;                                                   // convert to C
 
   return steinhart;
 }
