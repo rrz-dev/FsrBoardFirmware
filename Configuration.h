@@ -25,7 +25,7 @@
 #define SENSOR_COUNT						          3
 #define DEFAULT_LONG_AVERAGE_BUFFER_SIZE	16
 #define DEFAULT_SHORT_AVERAGE_BUFFER_SIZE	4
-#define EEPROM_VERSION                    1
+#define EEPROM_VERSION                    2
 
 class Configuration
 {
@@ -56,13 +56,19 @@ public:
   static byte getHotG() { return hotG; }
   static byte getHotB() { return hotB; }
   static boolean getEndstopHighActive() { return endstopHighActive > 0; }
+  static float getThermistorBeta() { return thermBeta; }
+  static float getThermistorNominal() { return thermNominal; }
+  static float getTemperatureNominal() { return tempNominal; }
+  static byte getThermistorNumSamples() { return thermNumSamples; }
 
 private:
   static void updateEepromFormat(byte version);
-  static void EEPROMUpdateLong(int address, long value);
+  static void EEPROMUpdateLong(long address, long value);
   static long EEPROMReadLong(long address);
-  static void EEPROMUpdateInt16(int address, uint16_t value);
+  static void EEPROMUpdateInt16(long address, uint16_t value);
   static long EEPROMReadInt16(long address);
+  static void EEPROMUpdateFloat(long address, float value);
+  static float EEPROMReadFloat(long address);
   
 private:
   static unsigned long longAverageBufferTime;
@@ -80,5 +86,9 @@ private:
   static byte hotG;
   static byte hotB;
   static byte endstopHighActive;
+  static float tempNominal;
+  static float thermNominal;
+  static float thermBeta;
+  static byte thermNumSamples;
 };
 

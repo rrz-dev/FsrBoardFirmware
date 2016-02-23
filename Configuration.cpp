@@ -37,6 +37,10 @@ byte Configuration::hotR;
 byte Configuration::hotG;
 byte Configuration::hotB;
 byte Configuration::endstopHighActive;
+float Configuration::tempNominal;
+float Configuration::thermNominal;
+float Configuration::thermBeta;
+byte Configuration::thermNumSamples;
   
 Configuration::Configuration()
 {
@@ -85,6 +89,12 @@ void Configuration::load()
   EEPROM.get(29, hotB);  
   EEPROM.get(30, endstopHighActive);
 
+  // version 2
+  tempNominal = EEPROMReadFloat(31);
+  thermNominal = EEPROMReadFloat(35);
+  thermBeta = EEPROMReadFloat(39);
+  EEPROM.get(40, thermNumSamples);
+
   printSettings();
 }
 
@@ -105,6 +115,10 @@ void Configuration::setDefaults()
   hotG = 0;
   hotB = 0;
   endstopHighActive = 0;
+  tempNominal = 25.0f;
+  thermNominal = 100000.0f;
+  thermBeta = 4267;
+  thermNumSamples = 5;
 }
 
 void Configuration::storeValues()
@@ -135,6 +149,12 @@ void Configuration::storeValues()
   EEPROM.update(28, hotG);
   EEPROM.update(29, hotB);
   EEPROM.update(30, endstopHighActive);
+
+  // version 2
+  EEPROMUpdateFloat(31, tempNominal);
+  EEPROMUpdateFloat(35, thermNominal);
+  EEPROMUpdateFloat(39, thermBeta);
+  EEPROM.update(40, thermNumSamples);
 }
 void Configuration::printSettings()
 {
@@ -154,6 +174,10 @@ void Configuration::printSettings()
   Serial.print(F("INFO:hotG="));                           Serial.println(hotG);
   Serial.print(F("INFO:hotB="));                           Serial.println(hotB);
   Serial.print(F("INFO:endstopHighActive="));              Serial.println(endstopHighActive);
+  Serial.print(F("INFO:temperatureNominal="));             Serial.println(tempNominal);
+  Serial.print(F("INFO:thermistorNominal="));              Serial.println(thermNominal);
+  Serial.print(F("INFO:thermistorBeta="));                 Serial.println(thermBeta);
+  Serial.print(F("INFO:thermistorNumSamples="));           Serial.println(thermNumSamples);
 }
 
 void Configuration::killEEPROM()
@@ -166,7 +190,7 @@ void Configuration::killEEPROM()
 
 void Configuration::updateEepromFormat(byte version)
 {
-  if (version == 0 && EEPROM_VERSION == 1)
+  if (version < 1 && EEPROM_VERSION == 1)
   {
     EEPROM.update(4, EEPROM_VERSION); // new version
     
@@ -181,9 +205,17 @@ void Configuration::updateEepromFormat(byte version)
     EEPROM.update(29, 0);   // hotB
     EEPROM.update(30, 0);   // endstopHighActive
   }
+
+  if (version < 2 && EEPROM_VERSION == 2)
+  {
+    EEPROMUpdateFloat(31, 25.0f);
+    EEPROMUpdateFloat(35, 100000.0f);
+    EEPROMUpdateFloat(39, 4267);
+    EEPROM.update(40, 5);
+  }
 }
 
-void Configuration::EEPROMUpdateLong(int address, long value)
+void Configuration::EEPROMUpdateLong(long address, long value)
 {
   //Write the 4 bytes into the eeprom memory.
   EEPROM.update(address, (value & 0xFF));
@@ -202,7 +234,7 @@ long Configuration::EEPROMReadLong(long address)
   return ((a << 0) & 0xFF) + ((b << 8) & 0xFFFF) + ((c << 16) & 0xFFFFFF) + ((d << 24) & 0xFFFFFFFF);
 }      
 
-void Configuration::EEPROMUpdateInt16(int address, uint16_t value)
+void Configuration::EEPROMUpdateInt16(long address, uint16_t value)
 {
   //Write the 2 bytes into the eeprom memory.
   EEPROM.update(address, (value & 0xFF));
@@ -215,6 +247,27 @@ long Configuration::EEPROMReadInt16(long address)
   long b = EEPROM.read(address + 1);
 
   return ((a << 0) & 0xFF) + ((b << 8) & 0xFFFF);
+}
+
+void Configuration::EEPROMUpdateFloat(long address, float value)
+{
+   byte* p = (byte*)(void*)&value;
+   for (int i = 0; i < sizeof(value); i++)
+   {
+       EEPROM.update(address++, *p++);
+   }
+}
+
+float Configuration::EEPROMReadFloat(long address)
+{
+   double value = 0.0;
+   byte* p = (byte*)(void*)&value;
+   for (int i = 0; i < sizeof(value); i++)
+   {
+       *p++ = EEPROM.read(address++);
+   }
+   
+   return value;
 }
 
 void Configuration::setKeyValue(const char* key, long value)
@@ -278,6 +331,22 @@ void Configuration::setKeyValue(const char* key, long value)
   else if (strcasecmp(key,"endstopHighActive") == 0)
   {
     endstopHighActive = static_cast<byte>(value);
+  }
+  else if (strcasecmp(key,"temperatureNominal") == 0)
+  {
+    tempNominal = static_cast<float>(value);
+  }
+  else if (strcasecmp(key,"thermistorNominal") == 0)
+  {
+    thermNominal = static_cast<float>(value);
+  }
+  else if (strcasecmp(key,"thermistorBeta") == 0)
+  {
+    thermBeta = static_cast<float>(value);
+  }
+  else if (strcasecmp(key,"thermistorNumSamples") == 0)
+  {
+    thermNumSamples = static_cast<byte>(value);
   }
 }
 

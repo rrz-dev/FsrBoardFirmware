@@ -30,3 +30,7 @@ For setting configuration values use the M800 M-Code. It has two argument types:
 * hotG (default: 0) - green component of hot temperature color
 * hotB (default: 0) - blue component of hot temperature color
 * endstopHighActive (default: 0) - when value is greater than 0, the endstop trigger logic is inverted
+* temperatureNominal (default: 25) - temperature at nominal resistance
+* thermistorNominal (default: 100000) - resistance at nominal temperature
+* thermistorBeta (default: 4267) - beta value of the thermistor (defaults to Semitec 104-GT2)
+* thermistorNumSamples (default: 5) - number of samples for smooth thermistor readings
