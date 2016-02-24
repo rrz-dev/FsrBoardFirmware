@@ -39,7 +39,7 @@ byte Configuration::hotB;
 byte Configuration::endstopHighActive;
 float Configuration::tempNominal;
 float Configuration::thermNominal;
-float Configuration::thermBeta;
+unsigned long Configuration::thermBeta;
 byte Configuration::thermNumSamples;
   
 Configuration::Configuration()
@@ -92,8 +92,8 @@ void Configuration::load()
   // version 2
   tempNominal = EEPROMReadFloat(31);
   thermNominal = EEPROMReadFloat(35);
-  thermBeta = EEPROMReadFloat(39);
-  EEPROM.get(40, thermNumSamples);
+  thermBeta = EEPROMReadLong(39);
+  EEPROM.get(43, thermNumSamples);
 
   printSettings();
 }
@@ -153,8 +153,8 @@ void Configuration::storeValues()
   // version 2
   EEPROMUpdateFloat(31, tempNominal);
   EEPROMUpdateFloat(35, thermNominal);
-  EEPROMUpdateFloat(39, thermBeta);
-  EEPROM.update(40, thermNumSamples);
+  EEPROMUpdateLong(39, thermBeta);
+  EEPROM.update(43, thermNumSamples);
 }
 void Configuration::printSettings()
 {
@@ -190,9 +190,11 @@ void Configuration::killEEPROM()
 
 void Configuration::updateEepromFormat(byte version)
 {
+  bool updateVersion = false;
+  
   if (version < 1 && EEPROM_VERSION == 1)
   {
-    EEPROM.update(4, EEPROM_VERSION); // new version
+    updateVersion = true;
     
     EEPROM.update(21, 20);  // coldTemp
     EEPROM.update(22, 120); // hotTemp
@@ -208,10 +210,25 @@ void Configuration::updateEepromFormat(byte version)
 
   if (version < 2 && EEPROM_VERSION == 2)
   {
+    updateVersion = true;
+
     EEPROMUpdateFloat(31, 25.0f);
     EEPROMUpdateFloat(35, 100000.0f);
     EEPROMUpdateFloat(39, 4267);
     EEPROM.update(40, 5);
+  }
+
+  if (version < 3 && EEPROM_VERSION == 3)
+  {
+    updateVersion = true;
+    
+    EEPROMUpdateLong(39, 4267);
+    EEPROM.update(43, 5);
+  }
+
+  if (updateVersion)
+  {
+    EEPROM.update(4, EEPROM_VERSION); // new version
   }
 }
 
@@ -342,7 +359,7 @@ void Configuration::setKeyValue(const char* key, long value)
   }
   else if (strcasecmp(key,"thermistorBeta") == 0)
   {
-    thermBeta = static_cast<float>(value);
+    thermBeta = value;
   }
   else if (strcasecmp(key,"thermistorNumSamples") == 0)
   {

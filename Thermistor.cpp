@@ -24,11 +24,12 @@
 
 #include "Arduino.h"
 
+#include <math.h>
+
 Thermistor::Thermistor()
   : currentTemp(20.0f)
   , resistance(0)
 {
-  
 }
 
 void Thermistor::update(unsigned long time)
@@ -48,29 +49,19 @@ float Thermistor::getRawResistance()
 
 float Thermistor::calc(int rawAdc)
 {
-/*  
-  float vcc = 3.3f;       // only used for display purposes, if used set to the measured Vcc.
-  float pad = 100000;     // balance/pad resistor value, set this to the measured resistance of your pad resistor
-  float thermr = 100000;  // thermistor nominal resistance
-
-  resistance = pad * ((1024.0 / rawAdc) - 1); 
-  float temp = log(resistance); // Saving the Log(resistance) so not to calculate it 4 times later
-  temp = 1 / (0.001129148 + (0.000234125 * temp) + (0.0000000876741 * temp * temp * temp));
-  temp = temp - 273.15;  // Convert Kelvin to Celsius
-
-  return temp;
-*/
+  float average = static_cast<float>(map(rawAdc,0,1023,1023,0));
 
   // convert the value to resistance
-  resistance = 1023.0f / static_cast<float>(rawAdc - 1);
-  resistance = 100000.0f / resistance;                                    // 100000 -> R10 resistor on FSR board
+  average = 1023.0 / average - 1.0;
+  average = 100000.0 / average;                                           // 100000 -> R10 resistor on FSR board
+  resistance = average;
  
-  float steinhart = resistance / Configuration::getThermistorNominal();   // (R/Ro)
+  float steinhart = average / Configuration::getThermistorNominal();      // (R/Ro)
   steinhart = log(steinhart);                                             // ln(R/Ro)
   steinhart /= Configuration::getThermistorBeta();                        // 1/B * ln(R/Ro)
-  steinhart += 1.0f / (Configuration::getTemperatureNominal() + 273.15f); // + (1/To)
-  steinhart = 1.0f / steinhart;                                           // Invert
-  steinhart -= 273.15f;                                                   // convert to C
+  steinhart += 1.0 / (Configuration::getTemperatureNominal() + 273.15);   // + (1/To)
+  steinhart = 1.0 / steinhart;                                            // Invert
+  steinhart -= 273.15;                                                    // convert to C
 
   return steinhart;
 }
