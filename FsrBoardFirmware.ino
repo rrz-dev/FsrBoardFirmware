@@ -130,6 +130,10 @@ void loop()
     {
       digitalWrite(ALARM_OUT_PIN, Configuration::getEndstopHighActive() ? LOW : HIGH);
     }
+    else
+    {
+      digitalWrite(ALARM_OUT_PIN, Configuration::getEndstopHighActive() ? HIGH : LOW);
+    }
   }
 }
 
