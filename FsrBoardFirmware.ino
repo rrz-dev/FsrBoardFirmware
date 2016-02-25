@@ -68,6 +68,9 @@ void setup()
   pinMode(LED_R, OUTPUT);
   pinMode(LED_G, OUTPUT);
   pinMode(LED_B, OUTPUT);
+
+  pinMode(ALARM_OUT_PIN, OUTPUT);
+  digitalWrite(ALARM_OUT_PIN, Configuration::getEndstopHighActive() ? HIGH : LOW);
 }
 
 void loop() 
@@ -100,20 +103,34 @@ void loop()
   //
   thermistor.update(time);
 
-  float lowTemp = Configuration::getColdTemp();
-  float highTemp = Configuration::getHotTemp();
-  float divider = highTemp - lowTemp;
-  float t = (thermistor.getCurrentTemperature() - lowTemp) / divider;
+  if (Configuration::getRgbOutEnabled())
+  {
+    float lowTemp = Configuration::getColdTemp();
+    float highTemp = Configuration::getHotTemp();
+    float divider = highTemp - lowTemp;
+    float t = (thermistor.getCurrentTemperature() - lowTemp) / divider;
 
-  Color cold(Configuration::getColdR()/255.0f, Configuration::getColdG()/255.0f, Configuration::getColdB()/255.0f);
-  Color hot(Configuration::getHotR()/255.0f, Configuration::getHotG()/255.0f, Configuration::getHotB()/255.0f);
+    Color cold(Configuration::getColdR()/255.0f, Configuration::getColdG()/255.0f, Configuration::getColdB()/255.0f);
+    Color hot(Configuration::getHotR()/255.0f, Configuration::getHotG()/255.0f, Configuration::getHotB()/255.0f);
 
-  Color rgbLedColor = cold.interpolate(hot, t, &linearF);
-  RGB rgb = rgbLedColor.getRGB();
+    Color rgbLedColor = cold.interpolate(hot, t, &linearF);
+    RGB rgb = rgbLedColor.getRGB();
 
-  analogWrite(LED_R, static_cast<byte>(rgb.r * 255));
-  analogWrite(LED_G, static_cast<byte>(rgb.g * 255));
-  analogWrite(LED_B, static_cast<byte>(rgb.b * 255));
+    analogWrite(LED_R, static_cast<byte>(rgb.r * 255));
+    analogWrite(LED_G, static_cast<byte>(rgb.g * 255));
+    analogWrite(LED_B, static_cast<byte>(rgb.b * 255));
+  }
+
+  //
+  // check alarm temperature
+  //
+  if (Configuration::getAlarmOutEnabled())
+  {
+    if (thermistor.getCurrentTemperature() >= Configuration::getAlarmTemp())
+    {
+      digitalWrite(ALARM_OUT_PIN, Configuration::getEndstopHighActive() ? LOW : HIGH);
+    }
+  }
 }
 
 void handleMCode(Command c)

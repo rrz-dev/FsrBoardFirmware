@@ -41,6 +41,9 @@ float Configuration::tempNominal;
 float Configuration::thermNominal;
 unsigned long Configuration::thermBeta;
 byte Configuration::thermNumSamples;
+byte Configuration::alarmOutEnabled;
+byte Configuration::rgbOutEnabled;
+byte Configuration::alarmHighActive;
   
 Configuration::Configuration()
 {
@@ -95,6 +98,11 @@ void Configuration::load()
   thermBeta = EEPROMReadLong(39);
   EEPROM.get(43, thermNumSamples);
 
+  // version 4
+  EEPROM.get(44, alarmOutEnabled);
+  EEPROM.get(45, rgbOutEnabled);
+  EEPROM.get(46, alarmHighActive);
+
   printSettings();
 }
 
@@ -119,6 +127,9 @@ void Configuration::setDefaults()
   thermNominal = 100000.0f;
   thermBeta = 4267;
   thermNumSamples = 5;
+  alarmOutEnabled = 0;
+  rgbOutEnabled = 0;
+  alarmHighActive = 0;
 }
 
 void Configuration::storeValues()
@@ -155,6 +166,11 @@ void Configuration::storeValues()
   EEPROMUpdateFloat(35, thermNominal);
   EEPROMUpdateLong(39, thermBeta);
   EEPROM.update(43, thermNumSamples);
+
+  // version 4
+  EEPROM.update(44, alarmOutEnabled);
+  EEPROM.update(45, rgbOutEnabled);
+  EEPROM.update(46, alarmHighActive);
 }
 void Configuration::printSettings()
 {
@@ -178,6 +194,9 @@ void Configuration::printSettings()
   Serial.print(F("INFO:thermistorNominal="));              Serial.println(thermNominal);
   Serial.print(F("INFO:thermistorBeta="));                 Serial.println(thermBeta);
   Serial.print(F("INFO:thermistorNumSamples="));           Serial.println(thermNumSamples);
+  Serial.print(F("INFO:alarmOutEnabled="));                Serial.println(alarmOutEnabled);
+  Serial.print(F("INFO:rgbOutEnabled="));                  Serial.println(rgbOutEnabled);
+  Serial.print(F("INFO:alarmHighActive="));                Serial.println(alarmHighActive);
 }
 
 void Configuration::killEEPROM()
@@ -224,6 +243,15 @@ void Configuration::updateEepromFormat(byte version)
     
     EEPROMUpdateLong(39, 4267);
     EEPROM.update(43, 5);
+  }
+
+  if (version < 4 && EEPROM_VERSION == 4)
+  {
+    updateVersion = true;
+
+    EEPROM.update(44, 0); // alarmOutEnabled
+    EEPROM.update(45, 0); // rgbOutEnabled
+    EEPROM.update(46, 0); // alarmHighActive
   }
 
   if (updateVersion)
@@ -364,6 +392,18 @@ void Configuration::setKeyValue(const char* key, long value)
   else if (strcasecmp(key,"thermistorNumSamples") == 0)
   {
     thermNumSamples = static_cast<byte>(value);
+  }
+  else if (strcasecmp(key,"alarmOutEnabled") == 0)
+  {
+    alarmOutEnabled = static_cast<byte>(value);
+  }
+  else if (strcasecmp(key,"rgbOutEnabled") == 0)
+  {
+    rgbOutEnabled = static_cast<byte>(value);
+  }
+  else if (strcasecmp(key,"alarmHighActive") == 0)
+  {
+    alarmHighActive = static_cast<byte>(value);
   }
 }
 

@@ -34,3 +34,6 @@ For setting configuration values use the M800 M-Code. It has two argument types:
 * thermistorNominal (default: 100000) - resistance at nominal temperature
 * thermistorBeta (default: 4267) - beta value of the thermistor (defaults to Semitec 104-GT2)
 * thermistorNumSamples (default: 5) - number of samples for smooth thermistor readings
+* alarmOutEnabled (default: 0) - output of alarm signal when thermistor temperature reading exceeds *alarmTemp*
+* alarmHighActive (default: 0) - when value is greater than 0, the alarm trigger logic is inverted
+* rgbOutEnabled (default: 0) - when value is greater than 0, the rgb output logic is enabled. Needs working thermistor.

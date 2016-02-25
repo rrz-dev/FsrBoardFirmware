@@ -25,7 +25,7 @@
 #define SENSOR_COUNT						          3
 #define DEFAULT_LONG_AVERAGE_BUFFER_SIZE	16
 #define DEFAULT_SHORT_AVERAGE_BUFFER_SIZE	4
-#define EEPROM_VERSION                    3
+#define EEPROM_VERSION                    4
 
 class Configuration
 {
@@ -60,6 +60,9 @@ public:
   static float getThermistorNominal() { return thermNominal; }
   static float getTemperatureNominal() { return tempNominal; }
   static byte getThermistorNumSamples() { return thermNumSamples; }
+  static boolean getAlarmOutEnabled() { return alarmOutEnabled > 0; }
+  static boolean getRgbOutEnabled() { return rgbOutEnabled > 0; }
+  static boolean getAlarmHighActive() { return alarmHighActive > 0; }
 
 private:
   static void updateEepromFormat(byte version);
@@ -90,5 +93,8 @@ private:
   static float thermNominal;
   static unsigned long thermBeta;
   static byte thermNumSamples;
+  static byte alarmOutEnabled;
+  static byte rgbOutEnabled;
+  static byte alarmHighActive;
 };
 

@@ -35,3 +35,6 @@
 #define LED_R                   6
 #define LED_G                   5
 #define LED_B                   3
+
+#define ALARM_OUT_PIN           4
+
