@@ -20,18 +20,18 @@
 
 #pragma once
 
-#define SENSOR1_ANALOG_PIN 0
-#define SENSOR2_ANALOG_PIN 1
-#define SENSOR3_ANALOG_PIN 2
-#define THERMISTOR_ANALOG_PIN 3
+#define SENSOR1_ANALOG_PIN      0
+#define SENSOR2_ANALOG_PIN      1
+#define SENSOR3_ANALOG_PIN      2
+#define THERMISTOR_ANALOG_PIN   3
 
-#define CALIBRATION_SWITCH_PIN 2
+#define CALIBRATION_SWITCH_PIN  2
 
-#define ENDSTOP_OUT_PIN 13
-#define SENSOR1_LED_PIN 9
-#define SENSOR2_LED_PIN 10
-#define SENSOR3_LED_PIN 11
+#define ENDSTOP_OUT_PIN         13
+#define SENSOR1_LED_PIN         9
+#define SENSOR2_LED_PIN         10
+#define SENSOR3_LED_PIN         11
 
-#define LED_R                 6
-#define LED_G                 5
-#define LED_B                 3
+#define LED_R                   6
+#define LED_G                   5
+#define LED_B                   3
