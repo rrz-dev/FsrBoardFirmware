@@ -2,6 +2,7 @@
 Firmware for the RepRap FSR Board (http://www.repraptools.de) licensed under GPL v3 license (see LICENSE for more information).
 
 # Supported M-Codes
+* M111 - set debug level. *P0* to switch off, *P1* to set level 1. Level is active until next reset/poweroff.
 * M112 - print diagnostic sensor information
 * M115 - print firmware information
 * M119 - display endstop status

@@ -44,6 +44,9 @@ Thermistor thermistor;
 
 const int fsrDebugPin[] = { SENSOR1_LED_PIN, SENSOR2_LED_PIN, SENSOR3_LED_PIN };
 
+static byte debugLevel = 0;
+static boolean alarmOutTriggerMessage = false;
+
 void setup() 
 {
   Serial.begin(9600);
@@ -70,7 +73,7 @@ void setup()
   pinMode(LED_B, OUTPUT);
 
   pinMode(ALARM_OUT_PIN, OUTPUT);
-  digitalWrite(ALARM_OUT_PIN, Configuration::getEndstopHighActive() ? HIGH : LOW);
+  digitalWrite(ALARM_OUT_PIN, Configuration::getAlarmHighActive() ? HIGH : LOW);
 }
 
 void loop() 
@@ -128,11 +131,17 @@ void loop()
   {
     if (thermistor.getCurrentTemperature() >= Configuration::getAlarmTemp())
     {
-      digitalWrite(ALARM_OUT_PIN, Configuration::getEndstopHighActive() ? LOW : HIGH);
+      digitalWrite(ALARM_OUT_PIN, Configuration::getAlarmHighActive() ? LOW : HIGH);
+      if (debugLevel > 0 && !alarmOutTriggerMessage)
+      {
+        Serial.println("DEBUG:triggering alarm out");
+        alarmOutTriggerMessage = true;
+      }
     }
     else
     {
-      digitalWrite(ALARM_OUT_PIN, Configuration::getEndstopHighActive() ? HIGH : LOW);
+      digitalWrite(ALARM_OUT_PIN, Configuration::getAlarmHighActive() ? HIGH : LOW);
+      alarmOutTriggerMessage = false;
     }
   }
 }
@@ -141,6 +150,9 @@ void handleMCode(Command c)
 {
   switch (c.getCommandCode())
   {
+    case 111:   // debug
+      debugLevel = c.getParameterValue(P);
+      break;
     case 112:   // diagnose
       Commands::printDiagnose(sensor[0], sensor[1], sensor[2], thermistor);
       break;
