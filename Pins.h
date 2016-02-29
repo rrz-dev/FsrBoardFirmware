@@ -32,9 +32,9 @@
 #define SENSOR2_LED_PIN         10
 #define SENSOR3_LED_PIN         11
 
-#define LED_R                   6
+#define LED_R                   3
 #define LED_G                   5
-#define LED_B                   3
+#define LED_B                   6
 
 #define ALARM_OUT_PIN           4
 
