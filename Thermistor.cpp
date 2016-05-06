@@ -29,17 +29,32 @@
 Thermistor::Thermistor()
   : currentTemp(20.0f)
   , resistance(0)
+  , longAverageBuffer(0)
+  , timeAccu(0)  
 {
+  longAverageBuffer = new CircularBuffer<float>(30);
 }
 
 void Thermistor::update(unsigned long time)
 {
-  currentTemp = calc(analogRead(THERMISTOR_ANALOG_PIN));
+  static float threshold = 500.0f;
+  
+  float temp = calc(analogRead(THERMISTOR_ANALOG_PIN));
+
+  timeAccu += time - lastTime;
+  
+  if (timeAccu > threshold)
+  {
+    timeAccu -= threshold;
+    longAverageBuffer->push(temp);
+  }
+  
+  lastTime = time;  
 }
 
 float Thermistor::getCurrentTemperature()
 {
-  return currentTemp;
+  return longAverageBuffer->average();
 }
 
 float Thermistor::getRawResistance()

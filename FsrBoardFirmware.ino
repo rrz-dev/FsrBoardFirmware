@@ -174,6 +174,9 @@ void handleMCode(Command c)
     case 800:   // set key value
       Commands::setConfigurationValue(c.getParameterStringValue(K), c.getParameterValue(V));
       break;
+    default:
+      Commands::unknownCommand();
+      break;
   }
 }
 

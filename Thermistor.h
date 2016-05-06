@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include "CircularBuffer.h"
+
 class Thermistor
 {
 public:
@@ -35,5 +37,8 @@ private:
 private:
   float currentTemp;
   float resistance;
+  CircularBuffer<float>* longAverageBuffer;
+  unsigned long lastTime;
+  unsigned long timeAccu;  
 };
 

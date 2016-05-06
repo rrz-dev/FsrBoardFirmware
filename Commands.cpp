@@ -104,3 +104,8 @@ void Commands::setConfigurationValue(const char* k, long v)
   Configuration::setKeyValue(k, v);
 }
 
+void Commands::unknownCommand()
+{
+  Serial.println(F("WARN:don't know how to handle that command"));
+}
+

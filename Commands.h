@@ -34,5 +34,6 @@ public:
   static void storeSettings();
   static void printSettings();
   static void setConfigurationValue(const char* key, long value);
+  static void unknownCommand();
 };
 
