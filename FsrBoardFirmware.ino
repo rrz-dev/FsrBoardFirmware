@@ -144,6 +144,21 @@ void loop()
       alarmOutTriggerMessage = false;
     }
   }
+
+/*
+  Serial.print("INFO: sensor raw debug: ");
+  for (int i = 0; i < SENSOR_COUNT; i++)
+  {
+    Serial.print(sensor[i].shortAverage());
+    Serial.print("/");
+    Serial.print(sensor[i].longAverage());
+    int v = sensor[i].shortAverage() - sensor[i].longAverage();
+    Serial.print(" (");
+    Serial.print(v);
+    Serial.print(") ; ");
+  }
+  Serial.println();
+*/  
 }
 
 void handleMCode(Command c)
