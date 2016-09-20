@@ -67,6 +67,10 @@ bool Sensor::is_triggered()
   
   int v = min(abs(shortAverageBuffer->average() - longAverageBuffer->average()), 1024);
 
+  v = shortAverageBuffer->average() - longAverageBuffer->average();
+  if (v < 0) v = 0;
+  if (v > 1024) v = 1024;
+
   return v >= static_cast<int>(Configuration::getTriggerThreshold());
 }
 

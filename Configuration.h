@@ -23,7 +23,7 @@
 #include "Arduino.h"
 
 #define SENSOR_COUNT						          3
-#define DEFAULT_LONG_AVERAGE_BUFFER_SIZE	16
+#define DEFAULT_LONG_AVERAGE_BUFFER_SIZE	32
 #define DEFAULT_SHORT_AVERAGE_BUFFER_SIZE	4
 #define EEPROM_VERSION                    4
 
