@@ -32,6 +32,7 @@
 #include "SensorLed.h"
 #include "Thermistor.h"
 #include "GCodeParser.h"
+#include "RGBLed.h"
 
 Sensor sensor[SENSOR_COUNT] = { Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, SENSOR1_ANALOG_PIN) 
                               , Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, SENSOR2_ANALOG_PIN)
@@ -41,6 +42,7 @@ Endstop endstop;
 SensorLed sensorLed;
 GCodeParser parser;
 Thermistor thermistor;
+RGBLed leds;
 
 const int fsrDebugPin[] = { SENSOR1_LED_PIN, SENSOR2_LED_PIN, SENSOR3_LED_PIN };
 
@@ -68,12 +70,9 @@ void setup()
 	  sensorLed.add(&sensor[i], fsrDebugPin[i]);
   }
 
-  pinMode(LED_R, OUTPUT);
-  pinMode(LED_G, OUTPUT);
-  pinMode(LED_B, OUTPUT);
-
   pinMode(ALARM_OUT_PIN, OUTPUT);
   digitalWrite(ALARM_OUT_PIN, Configuration::getAlarmHighActive() ? HIGH : LOW);
+
 }
 
 void loop() 
@@ -106,23 +105,7 @@ void loop()
   //
   thermistor.update(time);
 
-  if (Configuration::getRgbOutEnabled())
-  {
-    float lowTemp = Configuration::getColdTemp();
-    float highTemp = Configuration::getHotTemp();
-    float divider = highTemp - lowTemp;
-    float t = (thermistor.getCurrentTemperature() - lowTemp) / divider;
-
-    Color cold(Configuration::getColdR()/255.0f, Configuration::getColdG()/255.0f, Configuration::getColdB()/255.0f);
-    Color hot(Configuration::getHotR()/255.0f, Configuration::getHotG()/255.0f, Configuration::getHotB()/255.0f);
-
-    Color rgbLedColor = cold.interpolate(hot, t, &linearF);
-    RGB rgb = rgbLedColor.getRGB();
-
-    analogWrite(LED_R, static_cast<byte>(rgb.r * 255));
-    analogWrite(LED_G, static_cast<byte>(rgb.g * 255));
-    analogWrite(LED_B, static_cast<byte>(rgb.b * 255));
-  }
+  leds.thermistor(thermistor.getCurrentTemperature());
 
   //
   // check alarm temperature
@@ -188,6 +171,19 @@ void handleMCode(Command c)
       break;
     case 800:   // set key value
       Commands::setConfigurationValue(c.getParameterStringValue(K), c.getParameterValue(V));
+      break;
+    case 921:   // set RGB-LEDs
+      switch((int)c.getParameterValue(S)) {
+		  case 0:
+          leds.off();
+				  break;
+		  case 1: 
+          leds.set(c.getParameterValue(K, 255), c.getParameterValue(V, 255), c.getParameterValue(B, 255));
+				  break;
+		  case 2: 
+          leds.setUseThermistor();
+          break;
+      }
       break;
     default:
       Commands::unknownCommand();
