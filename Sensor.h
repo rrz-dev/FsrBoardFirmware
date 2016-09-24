@@ -42,6 +42,7 @@ public:
   void debugTriggering(int diff);
   void debugPeek(int v, int v2);
   void debugCurrent(int v);
+  static void debugEndline();
 private:
   void createBuffer(size_t longAverageBufferSize, size_t shortAverageBufferSize);
 

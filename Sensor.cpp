@@ -118,6 +118,15 @@ void Sensor::debugTriggering(int diff) {
 
 }
 
+void Sensor::debugEndline() {
+	// Sensor debug needs a newline
+	  if (Configuration::getDebugLevel()==6
+	     || Configuration::getDebugLevel()==7 ) {
+		  Serial.println("");
+		  delay(100);
+	  }
+}
+
 void Sensor::reset()
 {
   longAverageThreshold = Configuration::getLongAverageBufferTime() / longAverageBuffer->bufferSize();

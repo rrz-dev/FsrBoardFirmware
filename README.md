@@ -7,8 +7,7 @@ Firmware for the RepRap FSR Board (http://www.repraptools.de) licensed under GPL
    *P1* to set level 1. Level is active until next reset/poweroff.
    *P3* to printout Sensordata on triggering. 
    *P6* to printout current sensor data. Aware! It's slow down the triggering. Do not use it during Z-Probing.
-   *P7* to printout current sensor data as differenz to shortAverage. Here you can see peeks and minimize them. 
-        It's slow down the triggering. Do not use it during Z-Probing.
+   *P7* to printout current sensor data as differenz to shortAverage for findout peeks. Here you can see peeks    and minimize them. It's slow down the triggering. Do not use it during Z-Probing.
 
 * M112 - print diagnostic sensor information
 * M115 - print firmware information
@@ -46,3 +45,5 @@ For setting configuration values use the M800 M-Code. It has two argument types:
 * alarmOutEnabled (default: 0) - output of alarm signal when thermistor temperature reading exceeds *alarmTemp*
 * alarmHighActive (default: 0) - when value is greater than 0, the alarm trigger logic is inverted
 * rgbOutEnabled (default: 0) - when value is greater than 0, the rgb output logic is enabled. Needs working thermistor.
+
+

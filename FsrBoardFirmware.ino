@@ -93,12 +93,9 @@ void loop()
     sensorTriggered |= sensor[i].is_triggered();
   }
 
-  // Sensor debug needs a newline
-  if (Configuration::getDebugLevel()==6
-     || Configuration::getDebugLevel()==7 ) {
-	  Serial.println("");
-	  delay(100);
-  }
+  // Newline printing and slowing down for debugLevel 6 and 7.
+  Sensor::debugEndline();
+
   endstop.update(time, sensorTriggered);
 
   //
