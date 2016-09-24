@@ -44,6 +44,7 @@ byte Configuration::thermNumSamples;
 byte Configuration::alarmOutEnabled;
 byte Configuration::rgbOutEnabled;
 byte Configuration::alarmHighActive;
+byte Configuration::debugLevel;
   
 Configuration::Configuration()
 {
@@ -130,6 +131,7 @@ void Configuration::setDefaults()
   alarmOutEnabled = 0;
   rgbOutEnabled = 0;
   alarmHighActive = 0;
+  debugLevel = 0;
 }
 
 void Configuration::storeValues()

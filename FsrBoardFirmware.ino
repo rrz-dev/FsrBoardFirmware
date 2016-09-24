@@ -46,7 +46,6 @@ RGBLed leds;
 
 const int fsrDebugPin[] = { SENSOR1_LED_PIN, SENSOR2_LED_PIN, SENSOR3_LED_PIN };
 
-static byte debugLevel = 0;
 static boolean alarmOutTriggerMessage = false;
 
 void setup() 
@@ -93,6 +92,13 @@ void loop()
     sensor[i].update(time);
     sensorTriggered |= sensor[i].is_triggered();
   }
+
+  // Sensor debug needs a newline
+  if (Configuration::getDebugLevel()==6
+     || Configuration::getDebugLevel()==7 ) {
+	  Serial.println("");
+	  delay(100);
+  }
   endstop.update(time, sensorTriggered);
 
   //
@@ -115,7 +121,7 @@ void loop()
     if (thermistor.getCurrentTemperature() >= Configuration::getAlarmTemp())
     {
       digitalWrite(ALARM_OUT_PIN, Configuration::getAlarmHighActive() ? LOW : HIGH);
-      if (debugLevel > 0 && !alarmOutTriggerMessage)
+      if (Configuration::getDebugLevel() > 0 && !alarmOutTriggerMessage)
       {
         Serial.println("DEBUG:triggering alarm out");
         alarmOutTriggerMessage = true;
@@ -149,7 +155,10 @@ void handleMCode(Command c)
   switch (c.getCommandCode())
   {
     case 111:   // debug
-      debugLevel = c.getParameterValue(P);
+      Configuration::setDebugLevel(c.getParameterValue(P));
+      Serial.print("Debuglevel set to ");
+      Serial.println(Configuration::getDebugLevel());
+
       break;
     case 112:   // diagnose
       Commands::printDiagnose(sensor[0], sensor[1], sensor[2], thermistor);
