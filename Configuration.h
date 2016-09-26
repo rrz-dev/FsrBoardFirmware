@@ -27,6 +27,8 @@
 #define DEFAULT_SHORT_AVERAGE_BUFFER_SIZE	4
 #define EEPROM_VERSION                    4
 
+
+
 class Configuration
 {
 public:
@@ -63,7 +65,8 @@ public:
   static boolean getAlarmOutEnabled() { return alarmOutEnabled > 0; }
   static boolean getRgbOutEnabled() { return rgbOutEnabled > 0; }
   static boolean getAlarmHighActive() { return alarmHighActive > 0; }
-
+  static byte getDebugLevel() { return debugLevel; }
+  static void setDebugLevel( byte level) { debugLevel = level; }
 private:
   static void updateEepromFormat(byte version);
   static void EEPROMUpdateLong(long address, long value);
@@ -74,6 +77,7 @@ private:
   static float EEPROMReadFloat(long address);
   
 private:
+  static byte debugLevel;
   static unsigned long longAverageBufferTime;
   static unsigned long defaultEndstopMinHighMs;
   static uint16_t triggerThreshold;

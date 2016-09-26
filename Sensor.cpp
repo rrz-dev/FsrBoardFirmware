@@ -53,12 +53,18 @@ void Sensor::update(unsigned long time)
 
   timeAccu += time - lastTime;
 
-  if (timeAccu > longAverageThreshold && !is_triggered())
+  if (timeAccu > longAverageThreshold /*&& !is_triggered()*/)
   {
     timeAccu -= longAverageThreshold;
     longAverageBuffer->push(v);
   }
   lastTime = time;
+
+  if (Configuration::getDebugLevel() == 6) {
+	  debugCurrent(v);
+  } else if (Configuration::getDebugLevel() == 7) {
+	  debugCurrent(v - shortAverageBuffer->average());
+  }
 }
 
 bool Sensor::is_triggered()
@@ -71,7 +77,54 @@ bool Sensor::is_triggered()
   if (v < 0) v = 0;
   if (v > 1024) v = 1024;
 
-  return v >= static_cast<int>(Configuration::getTriggerThreshold());
+  bool result = v >= static_cast<int>(Configuration::getTriggerThreshold());
+
+  if (result && Configuration::getDebugLevel() == 3) {
+	  debugTriggering(v);
+  }
+
+  return result;
+}
+
+void Sensor::debugCurrent(int v) {
+	Serial.print(F("S"));
+	Serial.print(analogPin);
+	Serial.print(F(":"));
+	// minus printing
+	Serial.print((v<0)? '-' :  ' ');
+	v = abs(v);
+
+	// pad digits
+	int digits = 1;
+	if ( v > 10 ) digits = 2;
+	if ( v > 100 ) digits = 3;
+	for (int i = 1; i<4-digits; i++) Serial.print("0");
+
+	Serial.print(v);
+	Serial.print(F("\t"));
+}
+
+
+
+void Sensor::debugTriggering(int diff) {
+	Serial.print(F("Triggered S"));
+	Serial.print(analogPin);
+	Serial.print(F(": Diff="));
+	Serial.print(diff);
+	Serial.print(F(" ShortABuf="));
+	Serial.print(shortAverageBuffer->average());
+	Serial.print(F(" LongABuf="));
+	Serial.println(longAverageBuffer->average());
+
+}
+
+void Sensor::debugEndline() {
+	// Sensor debug needs a newline
+	  if (Configuration::getDebugLevel()==6
+	     || Configuration::getDebugLevel()==7 ) {
+		  Serial.println("");
+		  delay(100);
+	  }
 }
 
 void Sensor::reset()
@@ -96,4 +149,5 @@ int Sensor::shortAverage()
 {
   return min(shortAverageBuffer->average(), 1024);
 }
+
 
