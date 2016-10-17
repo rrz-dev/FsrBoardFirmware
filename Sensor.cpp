@@ -21,9 +21,8 @@
 #include "Sensor.h"
 #include "Configuration.h"
 
-Sensor::Sensor(size_t idx, size_t longAverageBufferSize, size_t shortAverageBufferSize, int analogPin)
-  : idx(idx)
-  , longAverageBuffer(0)
+Sensor::Sensor(size_t longAverageBufferSize, size_t shortAverageBufferSize, int analogPin)
+  : longAverageBuffer(0)
   , shortAverageBuffer(0)
   , analogPin(analogPin)
   , timeAccu(0)
@@ -54,7 +53,7 @@ void Sensor::update(unsigned long time)
 
   timeAccu += time - lastTime;
 
-  if (timeAccu > longAverageThreshold && !is_triggered())
+  if (timeAccu > longAverageThreshold && !is_triggered(1) && !is_triggered(2) && !is_triggered(3))
   {
     timeAccu -= longAverageThreshold;
     longAverageBuffer->push(v);
@@ -68,7 +67,7 @@ void Sensor::update(unsigned long time)
   }
 }
 
-bool Sensor::is_triggered()
+bool Sensor::is_triggered(const size_t idx)
 {
   if (is_calibrating()) return false;
   

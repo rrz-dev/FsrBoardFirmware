@@ -277,8 +277,8 @@ void Configuration::updateEepromFormat(byte version)
   {
     updateVersion = true;
 
-    EEPROM.update(48, EEPROMReadInt16(14)); // trigger2threshold
-    EEPROM.update(50, EEPROMReadInt16(14)); // trigger3threshold
+    EEPROMUpdateLong(48, EEPROMReadInt16(14)); // trigger2threshold
+    EEPROMUpdateLong(50, EEPROMReadInt16(14)); // trigger3threshold
   }
   
 
