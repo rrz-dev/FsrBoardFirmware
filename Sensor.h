@@ -27,7 +27,7 @@
 class Sensor
 {
 public:
-  Sensor(size_t longAverageBufferSize, size_t shortAverageBufferSize, int analogPin);
+  Sensor(size_t idx, size_t longAverageBufferSize, size_t shortAverageBufferSize, int analogPin);
   ~Sensor();
 
   void update(unsigned long time);
@@ -47,6 +47,7 @@ private:
   void createBuffer(size_t longAverageBufferSize, size_t shortAverageBufferSize);
 
 private:
+  size_t idx;
   CircularBuffer<int>* longAverageBuffer;
   CircularBuffer<int>* shortAverageBuffer;
   unsigned long lastTime;

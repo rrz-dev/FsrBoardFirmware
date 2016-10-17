@@ -24,7 +24,9 @@
 
 unsigned long Configuration::longAverageBufferTime;
 unsigned long Configuration::defaultEndstopMinHighMs;
-uint16_t Configuration::triggerThreshold;
+uint16_t Configuration::trigger1Threshold;
+uint16_t Configuration::trigger2Threshold;
+uint16_t Configuration::trigger3Threshold;
 unsigned long Configuration::calibrationLedDelay;
 byte Configuration::i2cSlaveAddress;
 byte Configuration::coldTemp;
@@ -77,7 +79,7 @@ void Configuration::load()
 
   longAverageBufferTime = EEPROMReadLong(6);
   defaultEndstopMinHighMs = EEPROMReadLong(10);
-  triggerThreshold = EEPROMReadInt16(14);
+  trigger1Threshold = EEPROMReadInt16(14);
   calibrationLedDelay = EEPROMReadLong(16);
   EEPROM.get(20, i2cSlaveAddress);
 
@@ -104,6 +106,12 @@ void Configuration::load()
   EEPROM.get(45, rgbOutEnabled);
   EEPROM.get(46, alarmHighActive);
 
+  // version 5
+
+  // Byte 47 padding / spare
+  trigger2Threshold = EEPROMReadInt16(48);
+  trigger3Threshold = EEPROMReadInt16(50);
+
   printSettings();
 }
 
@@ -111,7 +119,9 @@ void Configuration::setDefaults()
 {
   longAverageBufferTime = 5000;
   defaultEndstopMinHighMs = 500;
-  triggerThreshold = 14;
+  trigger1Threshold = 14;
+  trigger2Threshold = 14;
+  trigger3Threshold = 14;
   calibrationLedDelay = 250;
   i2cSlaveAddress = 77;
   coldTemp = 20;
@@ -147,7 +157,7 @@ void Configuration::storeValues()
 
   EEPROMUpdateLong(6, longAverageBufferTime);
   EEPROMUpdateLong(10, defaultEndstopMinHighMs);
-  EEPROMUpdateInt16(14, triggerThreshold);
+  EEPROMUpdateInt16(14, trigger1Threshold);
   EEPROMUpdateLong(16, calibrationLedDelay);
   EEPROM.update(20, i2cSlaveAddress);
 
@@ -173,13 +183,20 @@ void Configuration::storeValues()
   EEPROM.update(44, alarmOutEnabled);
   EEPROM.update(45, rgbOutEnabled);
   EEPROM.update(46, alarmHighActive);
+
+  // version 5
+  // Byte 47 spare/padding
+  EEPROMUpdateLong(48, trigger2Threshold);
+  EEPROMUpdateLong(50, trigger3Threshold);
 }
 void Configuration::printSettings()
 {
   Serial.print(F("INFO:FSR board configuration version "));Serial.println(EEPROM_VERSION);
   Serial.print(F("INFO:longAverageBufferTime="));          Serial.println(longAverageBufferTime);
   Serial.print(F("INFO:defaultEndstopMinHighMs="));        Serial.println(defaultEndstopMinHighMs);  
-  Serial.print(F("INFO:triggerThreshold="));               Serial.println(triggerThreshold);
+  Serial.print(F("INFO:trigger1Threshold="));               Serial.println(trigger1Threshold);
+  Serial.print(F("INFO:trigger2Threshold="));               Serial.println(trigger2Threshold);
+  Serial.print(F("INFO:trigger3Threshold="));               Serial.println(trigger3Threshold);
   Serial.print(F("INFO:calibrationLedDelay="));            Serial.println(calibrationLedDelay);
   Serial.print(F("INFO:i2cSlaveAddress="));                Serial.println(i2cSlaveAddress);
   Serial.print(F("INFO:coldTemp="));                       Serial.println(coldTemp);
@@ -256,6 +273,15 @@ void Configuration::updateEepromFormat(byte version)
     EEPROM.update(46, 0); // alarmHighActive
   }
 
+  if (version < 5 && EEPROM_VERSION == 5)
+  {
+    updateVersion = true;
+
+    EEPROM.update(48, EEPROMReadInt16(14)); // trigger2threshold
+    EEPROM.update(50, EEPROMReadInt16(14)); // trigger3threshold
+  }
+  
+
   if (updateVersion)
   {
     EEPROM.update(4, EEPROM_VERSION); // new version
@@ -329,7 +355,21 @@ void Configuration::setKeyValue(const char* key, long value)
   }
   else if (strcasecmp(key,"triggerThreshold") == 0)
   {
-    triggerThreshold = static_cast<uint16_t>(value);
+    trigger1Threshold = static_cast<uint16_t>(value);
+    trigger2Threshold = static_cast<uint16_t>(value);
+    trigger3Threshold = static_cast<uint16_t>(value);
+  }
+  else if (strcasecmp(key,"trigger1Threshold") == 0)
+  {
+    trigger1Threshold = static_cast<uint16_t>(value);
+  }
+  else if (strcasecmp(key,"trigger2Threshold") == 0)
+  {
+    trigger2Threshold = static_cast<uint16_t>(value);
+  }
+  else if (strcasecmp(key,"trigger3Threshold") == 0)
+  {
+    trigger3Threshold = static_cast<uint16_t>(value);
   }
   else if (strcasecmp(key,"calibrationLedDelay") == 0)
   {

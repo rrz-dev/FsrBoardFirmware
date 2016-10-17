@@ -25,7 +25,10 @@ For setting configuration values use the M800 M-Code. It has two argument types:
 
 * longAverageBufferTime (default: 5000) - time in milliseconds on which the sensor values without touch are averaged
 * defaultEndstopMinHighMs (default: 500) - this is the time in milliseconds the endstop out is triggered at least
-* triggerThreshold (default: 14) - this is the minimum differenc between the current sensor reading and the average sensor reading for triggering the endstop out
+* triggerThreshold (default: 14) - this is the minimum difference between the current sensor reading and the average sensor reading for triggering the endstop out. Threshold will be set for all sensors. See trigger*N*Threshold for individual sensor values
+* trigger1Threshold (default: 14) - set trigger threshold for sensor 1 (see triggerThreshold for further information)
+* trigger2Threshold (default: 14) - set trigger threshold for sensor 2 (see triggerThreshold for further information)
+* trigger3Threshold (default: 14) - set trigger threshold for sensor 3 (see triggerThreshold for further information)
 * calibrationLedDelay (default: 250) - this is the delay in milliseconds for the blinking leds when calibrating the sensor board after a reset
 * i2cSlaveAddress (default: 77) - slave address which is used to listen for messages on the i2c bus
 * coldTemp (default: 20) - cold temperature thermistor reading for RGB color interpolation to show heatbed temperature
