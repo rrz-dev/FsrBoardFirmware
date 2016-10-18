@@ -32,7 +32,7 @@ void Commands::printDiagnose(Sensor& s0, Sensor& s1, Sensor& s2, Thermistor& the
   
   Serial.println(F("INFO:sensor 0"));
   Serial.print(F("INFO:is_triggered: "));
-  Serial.print(s0.is_triggered(1));
+  Serial.print(s0.is_triggered());
   Serial.print(F(" is_calibrating: "));
   Serial.println(s0.is_calibrating());
   Serial.print(F("INFO:short_average: "));
@@ -42,7 +42,7 @@ void Commands::printDiagnose(Sensor& s0, Sensor& s1, Sensor& s2, Thermistor& the
   
   Serial.println(F("INFO:sensor 1"));
   Serial.print(F("INFO:is_triggered: "));
-  Serial.print(s1.is_triggered(2));
+  Serial.print(s1.is_triggered());
   Serial.print(F(" is_calibrating: "));
   Serial.println(s1.is_calibrating());
   Serial.print(F("INFO:short_average: "));
@@ -52,7 +52,7 @@ void Commands::printDiagnose(Sensor& s0, Sensor& s1, Sensor& s2, Thermistor& the
 
   Serial.println(F("INFO:sensor 2"));
   Serial.print(F("INFO:is_triggered: "));
-  Serial.print(s2.is_triggered(3));
+  Serial.print(s2.is_triggered());
   Serial.print(F(" is_calibrating: "));
   Serial.println(s2.is_calibrating());
   Serial.print(F("INFO:short_average: "));

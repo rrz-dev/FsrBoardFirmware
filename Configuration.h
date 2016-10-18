@@ -45,9 +45,9 @@ public:
 
   static unsigned long getLongAverageBufferTime() { return longAverageBufferTime; }
   static unsigned long getDefaultEndstopMinHighMs() { return defaultEndstopMinHighMs; }
-  static uint16_t getTrigger1Threshold() { return trigger1Threshold; }
-  static uint16_t getTrigger2Threshold() { return trigger2Threshold; }
-  static uint16_t getTrigger3Threshold() { return trigger3Threshold; }
+  static uint16_t* getTrigger1Threshold() { return &trigger1Threshold; }
+  static uint16_t* getTrigger2Threshold() { return &trigger2Threshold; }
+  static uint16_t* getTrigger3Threshold() { return &trigger3Threshold; }
   static unsigned long getCalibrationLedDelay() { return calibrationLedDelay; }
   static byte getI2cSlaveAddress() { return i2cSlaveAddress; }
   static byte getColdTemp() { return coldTemp; }

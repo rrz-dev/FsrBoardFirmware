@@ -34,9 +34,9 @@
 #include "GCodeParser.h"
 #include "RGBLed.h"
 
-Sensor sensor[SENSOR_COUNT] = { Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, SENSOR1_ANALOG_PIN) 
-                              , Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, SENSOR2_ANALOG_PIN)
-                              , Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, SENSOR3_ANALOG_PIN) 
+Sensor sensor[SENSOR_COUNT] = { Sensor(Configuration::getTrigger1Threshold(), SENSOR1_ANALOG_PIN) 
+                              , Sensor(Configuration::getTrigger2Threshold(), SENSOR2_ANALOG_PIN)
+                              , Sensor(Configuration::getTrigger3Threshold(), SENSOR3_ANALOG_PIN) 
                               } ;
 Endstop endstop;
 SensorLed sensorLed;
@@ -62,6 +62,7 @@ void setup()
   Wire.onReceive(receiveEvent);
     
   pinMode(CALIBRATION_SWITCH_PIN, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(CALIBRATION_SWITCH_PIN), startCalibration, FALLING);  //TODO: test whether to use FALLING or RISING
   
   for (size_t i = 0; i < SENSOR_COUNT; i++) 
   {
@@ -79,18 +80,13 @@ void loop()
   unsigned long time = millis();
   
   //
-  // update sensors, trigger endstop and handle calibration switch
+  // update sensors, trigger endstop
   //
-  bool calibrationSwitch = !digitalRead(CALIBRATION_SWITCH_PIN);
   bool sensorTriggered = false;
   for (size_t i = 0; i < SENSOR_COUNT; i++) 
   {
-    if (calibrationSwitch)
-    {
-      sensor[i].reset();
-    }
     sensor[i].update(time);
-    sensorTriggered |= sensor[i].is_triggered(i+1);
+    sensorTriggered |= sensor[i].is_triggered();
   }
 
   // Newline printing and slowing down for debugLevel 6 and 7.
@@ -228,6 +224,13 @@ void serialEvent()
   while (Serial.available() > 0)  //TODO: limit byte reads per loop iteration
   {
     parser.parse( Serial.read(), addCommand );
+  }
+}
+
+void startCalibration() {
+  for (size_t i = 0; i < SENSOR_COUNT; i++)
+  {
+    sensor[i].reset();
   }
 }
 

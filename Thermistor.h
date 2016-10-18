@@ -37,7 +37,7 @@ private:
 private:
   float currentTemp;
   float resistance;
-  CircularBuffer<float>* longAverageBuffer;
+  CircularBuffer<float, 16> longAverageBuffer;
   unsigned long lastTime;
   unsigned long timeAccu;  
 };

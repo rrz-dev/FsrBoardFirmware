@@ -21,17 +21,17 @@
 #pragma once
 
 #include "CircularBuffer.h"
+#include "Configuration.h"
 
 #include <stdint.h>
 
 class Sensor
 {
 public:
-  Sensor(size_t longAverageBufferSize, size_t shortAverageBufferSize, int analogPin);
-  ~Sensor();
+  Sensor(uint16_t* threshold, int analogPin);
 
   void update(unsigned long time);
-  bool is_triggered(const size_t idx);
+  bool is_triggered();
 
   void reset();
 
@@ -43,12 +43,11 @@ public:
   void debugPeek(int v, int v2);
   void debugCurrent(int v);
   static void debugEndline();
-private:
-  void createBuffer(size_t longAverageBufferSize, size_t shortAverageBufferSize);
 
 private:
-  CircularBuffer<int>* longAverageBuffer;
-  CircularBuffer<int>* shortAverageBuffer;
+  uint16_t* triggerThreshold;
+  CircularBuffer<int, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE> longAverageBuffer;
+  CircularBuffer<int, DEFAULT_LONG_AVERAGE_BUFFER_SIZE> shortAverageBuffer;
   unsigned long lastTime;
   unsigned long timeAccu;
   unsigned long longAverageThreshold;

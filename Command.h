@@ -38,7 +38,7 @@ class Command
 public:
   Command();
 
-  void setLineNumber(long lineNumber);
+  //void setLineNumber(long lineNumber);
   void setCommandType(CommandType type);
   void setCommandNumber(long number);
 
@@ -49,7 +49,7 @@ public:
 
   CommandType getCommandType() { return commandType; }
   long getCommandCode() { return commandNumber; }
-  long getLineNumber() { return lineNumber; }
+  //long getLineNumber() { return lineNumber; }
 
   Parameter parameters[5];
   unsigned int parameterCount;
@@ -61,7 +61,7 @@ public:
   const char* getParameterStringValue(uint32_t index, const char* defaultValue = "");
 
 private:
-  long lineNumber;
+  //long lineNumber;
   CommandType commandType;
   long commandNumber;
 };

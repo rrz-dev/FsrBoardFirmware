@@ -22,17 +22,17 @@
 #include "Arduino.h"
 
 Command::Command()
-  : lineNumber(-1)
-  , parameterCount(0)
+  : // lineNumber(-1)
+   parameterCount(0)
   , commandType(UNKNOWN)
   , commandNumber(0)
 {
 }
 
-void Command::setLineNumber(long lineNumber)
-{
-  Command::lineNumber = lineNumber;
-}
+//void Command::setLineNumber(long lineNumber)
+//{
+//  Command::lineNumber = lineNumber;
+//}
 
 void Command::setCommandType(CommandType type)
 {
@@ -80,7 +80,7 @@ void Command::print()
 */
 
   Serial.print("DEBUG: Command (line: ");
-  Serial.print(lineNumber);
+//  Serial.print(lineNumber);
   Serial.print(") ");
   Serial.print((char)commandType);
   Serial.println(commandNumber);
@@ -135,7 +135,7 @@ const char* Command::getParameterStringValue(uint32_t index, const char* default
 
 void Command::reset()
 {
-  lineNumber = -1;
+//  lineNumber = -1;
   parameterCount = 0;
   commandNumber = -1;
   commandType = UNKNOWN;

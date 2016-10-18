@@ -208,8 +208,8 @@ void GCodeParser::parse(const char& c, AddCommandCallback addCommand)
       else
       {
         // not a number -> line number ended
-        long lineNumber = atol(buffer);
-        command->setLineNumber(lineNumber);
+        //long lineNumber = atol(buffer);
+        //command->setLineNumber(lineNumber);
         //Serial << "DEBUG: Line number: " << lineNumber << endl;
         changeState(None);
         resetBuffer();

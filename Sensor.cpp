@@ -21,69 +21,46 @@
 #include "Sensor.h"
 #include "Configuration.h"
 
-Sensor::Sensor(size_t longAverageBufferSize, size_t shortAverageBufferSize, int analogPin)
-  : longAverageBuffer(0)
-  , shortAverageBuffer(0)
+Sensor::Sensor(uint16_t* threshold, int analogPin)
+  : triggerThreshold(threshold)
   , analogPin(analogPin)
   , timeAccu(0)
 {
-  createBuffer(longAverageBufferSize, shortAverageBufferSize);
-}
-
-Sensor::~Sensor()
-{
-  delete longAverageBuffer;
-  delete shortAverageBuffer;
-}
-
-void Sensor::createBuffer(size_t longAverageBufferSize, size_t shortAverageBufferSize)
-{
-  delete longAverageBuffer;
-  longAverageBuffer = new CircularBuffer<int>(longAverageBufferSize);
-
-  delete shortAverageBuffer;
-  shortAverageBuffer = new CircularBuffer<int>(shortAverageBufferSize);
 }
 
 void Sensor::update(unsigned long time)
 {
   int v = analogRead(analogPin);
 
-  shortAverageBuffer->push(v);
+  shortAverageBuffer.push(v);
 
   timeAccu += time - lastTime;
 
-  if (timeAccu > longAverageThreshold && !is_triggered(1) && !is_triggered(2) && !is_triggered(3))
+  if (timeAccu > longAverageThreshold && !is_triggered())
   {
     timeAccu -= longAverageThreshold;
-    longAverageBuffer->push(v);
+    longAverageBuffer.push(v);
   }
   lastTime = time;
 
   if (Configuration::getDebugLevel() == 6) {
 	  debugCurrent(v);
   } else if (Configuration::getDebugLevel() == 7) {
-	  debugCurrent(v - shortAverageBuffer->average());
+	  debugCurrent(v - shortAverageBuffer.average());
   }
 }
 
-bool Sensor::is_triggered(const size_t idx)
+bool Sensor::is_triggered()
 {
   if (is_calibrating()) return false;
   
-  int v = min(abs(shortAverageBuffer->average() - longAverageBuffer->average()), 1024);
+  int v = min(abs(shortAverageBuffer.average() - longAverageBuffer.average()), 1024);
 
-  v = shortAverageBuffer->average() - longAverageBuffer->average();
+  v = shortAverageBuffer.average() - longAverageBuffer.average();
   if (v < 0) v = 0;
   if (v > 1024) v = 1024;
 
-  int triggerThreshold;
-
-  if (idx == 1) triggerThreshold = Configuration::getTrigger1Threshold();
-  if (idx == 2) triggerThreshold = Configuration::getTrigger2Threshold();
-  if (idx == 3) triggerThreshold = Configuration::getTrigger3Threshold();
-
-  bool result = v >= triggerThreshold;
+  bool result = v >= *triggerThreshold;
 
   if (result && Configuration::getDebugLevel() == 3) {
 	  debugTriggering(v);
@@ -118,9 +95,9 @@ void Sensor::debugTriggering(int diff) {
 	Serial.print(F(": Diff="));
 	Serial.print(diff);
 	Serial.print(F(" ShortABuf="));
-	Serial.print(shortAverageBuffer->average());
+	Serial.print(shortAverageBuffer.average());
 	Serial.print(F(" LongABuf="));
-	Serial.println(longAverageBuffer->average());
+	Serial.println(longAverageBuffer.average());
 
 }
 
@@ -135,25 +112,24 @@ void Sensor::debugEndline() {
 
 void Sensor::reset()
 {
-  longAverageThreshold = Configuration::getLongAverageBufferTime() / longAverageBuffer->bufferSize();
+  longAverageThreshold = Configuration::getLongAverageBufferTime() / longAverageBuffer.bufferSize();
 
-  longAverageBuffer->clear();
-  shortAverageBuffer->clear();
+  longAverageBuffer.clear();
+  shortAverageBuffer.clear();
 }
 
 bool Sensor::is_calibrating()
 {
-  return longAverageBuffer->currentElementCount() < longAverageBuffer->bufferSize();
+  return longAverageBuffer.currentElementCount() < longAverageBuffer.bufferSize();
 }
 
 int Sensor::longAverage()
 {
-  return min(longAverageBuffer->average(), 1024);
+  return min(longAverageBuffer.average(), 1024);
 }
 
 int Sensor::shortAverage()
 {
-  return min(shortAverageBuffer->average(), 1024);
+  return min(shortAverageBuffer.average(), 1024);
 }
-
 
