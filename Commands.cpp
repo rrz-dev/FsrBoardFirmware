@@ -109,3 +109,10 @@ void Commands::unknownCommand()
   Serial.println(F("WARN:don't know how to handle that command"));
 }
 
+void Commands::startCalibration(Sensor& s0, Sensor& s1, Sensor& s2)
+{
+  s0.reset();
+  s1.reset();
+  s2.reset();
+}
+

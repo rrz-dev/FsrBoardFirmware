@@ -174,6 +174,9 @@ void handleMCode(Command c)
     case 800:   // set key value
       Commands::setConfigurationValue(c.getParameterStringValue(K), c.getParameterValue(V));
       break;
+    case 801:   // start calibration
+      Commands::startCalibration(sensor[0], sensor[1], sensor[2]);
+      break;
     case 921:   // set RGB-LEDs
       switch((int)c.getParameterValue(S)) {
 		  case 0:

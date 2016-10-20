@@ -35,5 +35,6 @@ public:
   static void printSettings();
   static void setConfigurationValue(const char* key, long value);
   static void unknownCommand();
+  static void startCalibration(Sensor& s0, Sensor& s1, Sensor& s2);
 };
 

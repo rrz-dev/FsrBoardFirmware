@@ -16,6 +16,7 @@ Firmware for the RepRap FSR Board (http://www.repraptools.de) licensed under GPL
 * M502 - revert to factory settings
 * M503 - print settings
 * M800 - set configuration key/value (see notes for further information on keys). Two arguments are used: K and V
+* M801 - start calibration procedure of sensors
 * M921 - RGB led control. *S0* to switch RGB led off, *S1* to switch RGB led on, *S2* let the thermistor control the led. Use *K*, *V* and *B* arguments for setting the red, green and blue color value of the led.
 
 # Setting keys and default values
