@@ -73,7 +73,8 @@ void GCodeParser::parse(const char& c, AddCommandCallback addCommand)
           if (command->getCommandType() != UNKNOWN)
           {
             addCommand(*command);
-            command->setCommandType(UNKNOWN);
+            //TODO: ??? command.setCommandType(UNKNOWN);
+            command->reset();
           }
           break;
       }
@@ -278,6 +279,8 @@ void GCodeParser::reset()
   {
     command = new Command();
   }
+
+  command->reset();
 
   if (!parameter)
   {

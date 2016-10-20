@@ -32,6 +32,7 @@ enum CommandType
   T = 'T',
 };
 
+#define MAX_PARAMETER_COUNT 5
 
 class Command
 {
@@ -51,7 +52,7 @@ public:
   long getCommandCode() { return commandNumber; }
   //long getLineNumber() { return lineNumber; }
 
-  Parameter parameters[5];
+  Parameter parameters[MAX_PARAMETER_COUNT];
   unsigned int parameterCount;
 
   //TODO: use template functions for parameter getters

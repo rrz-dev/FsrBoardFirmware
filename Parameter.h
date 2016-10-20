@@ -62,6 +62,8 @@ public:
   ParameterType getType() { return type; }
   ParameterValueType getValueType() { return valueType; }
 
+  void reset();
+
 public:
   ParameterType type;
   ParameterValueType valueType;

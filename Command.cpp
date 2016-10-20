@@ -139,5 +139,10 @@ void Command::reset()
   parameterCount = 0;
   commandNumber = -1;
   commandType = UNKNOWN;
+
+  for (int i = 0; i < MAX_PARAMETER_COUNT; i++)
+  {
+    parameters[i].reset();
+  }
 }
 
