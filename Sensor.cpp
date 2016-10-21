@@ -36,7 +36,7 @@ void Sensor::update(unsigned long time)
 
   timeAccu += time - lastTime;
 
-  if (timeAccu > longAverageThreshold && !is_triggered())
+  if (timeAccu > longAverageThreshold)
   {
     timeAccu -= longAverageThreshold;
     longAverageBuffer.push(v);
