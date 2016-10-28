@@ -22,21 +22,14 @@
 
 #include <Arduino.h>
 
-template <typename T> class CircularBuffer {
+template <typename T, size_t SIZE> class CircularBuffer {
 public:
-  CircularBuffer(const size_t size)
-    : size(size)
-    , head(0)
+  CircularBuffer()
+    : head(0)
     , tail(0)
     , count(0)
     , avg(0)
   {
-    buffer = new T[size];
-  }
-
-  virtual ~CircularBuffer()
-  {
-    delete [] buffer;
   }
 
   void clear()
@@ -46,9 +39,9 @@ public:
     count = 0;
     avg = 0;
 
-    for (size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < SIZE; i++)
     {
-      buffer[size] = 0;
+      buffer[i] = 0;
     }
   }
 
@@ -59,7 +52,7 @@ public:
     buffer[head] = object;
     head = nextHead;
 
-    if (count < size) count++;
+    if (count < SIZE) count++;
 
     T sum = 0;
     for (size_t i = 0; i < count; i++)
@@ -86,7 +79,7 @@ public:
 
   size_t bufferSize()
   {
-    return size;
+    return SIZE;
   }
 
   size_t currentElementCount()
@@ -97,14 +90,13 @@ public:
 private:
   size_t next(size_t current)
   {
-    return (current + 1) % size;
+    return (current + 1) % SIZE;
   }
 
 private:
-  T* buffer;
+  T buffer[SIZE];
   volatile size_t head;
   volatile size_t tail;
-  const size_t size;
   size_t count;
   volatile T avg;
 };

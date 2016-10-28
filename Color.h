@@ -20,21 +20,52 @@
 
 #pragma once
 
-class Endstop;
-class Sensor;
-class Thermistor;
+struct RGB
+{
+  float r;
+  float g;
+  float b;
+};
 
-class Commands
+struct HSV
+{
+  float h;
+  float s;
+  float v;
+};
+
+int linearF(float a, float b, float t);
+
+class Color
 {
 public:
-  static void printDiagnose(Sensor& s0, Sensor& s1, Sensor& s2, Thermistor& therm);
-  static void printFirmwareInfo();
-  static void printEndstopStatus(Endstop endstop);
-  static void factorySettings();
-  static void storeSettings();
-  static void printSettings();
-  static void setConfigurationValue(const char* key, long value);
-  static void unknownCommand();
-  static void startCalibration(Sensor& s0, Sensor& s1, Sensor& s2);
+  Color(float r, float g, float b);
+  Color(RGB rgb);
+  Color(HSV hsv);
+
+  RGB getRGB() { return rgb; }
+  HSV getHSV() { return hsv; }
+
+  template<typename F>
+  Color interpolate(Color b, float t, F interpolator)
+  {
+    // 0.0 <= t <= 1.0
+    HSV hsvB  = b.getHSV();
+    HSV final;
+
+    final.h = interpolator(hsv.h, hsvB.h, t);
+    final.s = interpolator(hsv.s, hsvB.s, t);
+    final.v = interpolator(hsv.v, hsvB.v, t);
+
+    return Color(final);
+  }
+
+private:
+  void calcHsv();
+  void calcRgb();
+  
+private:
+  RGB rgb;
+  HSV hsv;
 };
 

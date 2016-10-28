@@ -20,15 +20,31 @@
 
 #pragma once
 
-#define SENSOR1_ANALOG_PIN 0
-#define SENSOR2_ANALOG_PIN 1
-#define SENSOR3_ANALOG_PIN 2
-#define THERMISTOR_ANALOG_PIN 3
+#define SENSOR1_ANALOG_PIN      0   // FSR Sensor 1
+#define SENSOR2_ANALOG_PIN      1   // FSR Sensor 2
+#define SENSOR3_ANALOG_PIN      2   // FSR Sensor 3
+#define SENSOR1_LED_PIN         9   // FSR Debug LED Sensor 1 (optional)
+#define SENSOR2_LED_PIN         10  // FSR Debug LED Sensor 2 (optional)
+#define SENSOR3_LED_PIN         11  // FSR Debug LED Sensor 3 (optional)
+#define THERMISTOR_ANALOG_PIN   3   // Thermistor (optional)
 
-#define CALIBRATION_SWITCH_PIN 2
+#define CALIBRATION_SWITCH_PIN  2   // Switch (optional)
 
-#define ENDSTOP_OUT_PIN 13
-#define SENSOR1_LED_PIN 9
-#define SENSOR2_LED_PIN 10
-#define SENSOR3_LED_PIN 11
+#define ENDSTOP_OUT_PIN         13  // Endstop signal to master arduino
+
+#define LED_R                   3   // RGB stripe red (mosfet)
+#define LED_G                   5   // RGB stripe green (mosfet)
+#define LED_B                   6   // RGB stripe blue (mosfet)
+
+#define ALARM_OUT_PIN           4   // Alarm signal to master arduino (optional)
+
+#define AUX1_PIN                -1  // Arduino RST - Not usable from code   - currently unused
+#define AUX2_PIN                7   // Arduino D7                           - currently unused
+#define AUX3_PIN                8   // Arduino D8                           - currently unused
+#define AUX4_PIN                0   // Arduino RX                           - currently unused
+#define AUX5_PIN                1   // Arduino TX                           - currently unused
+#define AUX6_PIN                12  // Arduino D12                          - currently unused
+
+#define I2C_SDA_PIN             18  // I2C communication SDA to master arduino (optional)
+#define I2C_SDL_PIN             19  // I2C communication SDL to master arduino (optional)
 

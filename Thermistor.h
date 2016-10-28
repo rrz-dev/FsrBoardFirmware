@@ -20,21 +20,25 @@
 
 #pragma once
 
-class Endstop;
-class Sensor;
-class Thermistor;
+#include "CircularBuffer.h"
 
-class Commands
+class Thermistor
 {
 public:
-  static void printDiagnose(Sensor& s0, Sensor& s1, Sensor& s2, Thermistor& therm);
-  static void printFirmwareInfo();
-  static void printEndstopStatus(Endstop endstop);
-  static void factorySettings();
-  static void storeSettings();
-  static void printSettings();
-  static void setConfigurationValue(const char* key, long value);
-  static void unknownCommand();
-  static void startCalibration(Sensor& s0, Sensor& s1, Sensor& s2);
+  Thermistor();
+
+  void update(unsigned long time);
+  float getCurrentTemperature();
+  float getRawResistance();
+
+private:
+  float calc(int rawAdc);
+
+private:
+  float currentTemp;
+  float resistance;
+  CircularBuffer<float, 16> longAverageBuffer;
+  unsigned long lastTime;
+  unsigned long timeAccu;  
 };
 

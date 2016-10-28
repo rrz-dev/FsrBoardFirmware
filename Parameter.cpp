@@ -49,4 +49,14 @@ void Parameter::setString(const char* value)
   strncpy(stringValue, value, len);
 }
 
+void Parameter::reset()
+{
+  type = ParameterType::NONE;
+  valueType = PVT_UNKNOWN;
+  value = 0.0;
+  for (int i = 0; i < 32; i++)
+  {
+    stringValue[i] = '\0';
+  }
+}
 

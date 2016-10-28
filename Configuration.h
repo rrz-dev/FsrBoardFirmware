@@ -23,9 +23,11 @@
 #include "Arduino.h"
 
 #define SENSOR_COUNT						          3
-#define DEFAULT_LONG_AVERAGE_BUFFER_SIZE	16
+#define DEFAULT_LONG_AVERAGE_BUFFER_SIZE	32
 #define DEFAULT_SHORT_AVERAGE_BUFFER_SIZE	4
-#define EEPROM_VERSION                    0
+#define EEPROM_VERSION                    5
+
+
 
 class Configuration
 {
@@ -43,22 +45,64 @@ public:
 
   static unsigned long getLongAverageBufferTime() { return longAverageBufferTime; }
   static unsigned long getDefaultEndstopMinHighMs() { return defaultEndstopMinHighMs; }
-  static uint16_t getTriggerThreshold() { return triggerThreshold; }
+  static uint16_t* getTrigger1Threshold() { return &trigger1Threshold; }
+  static uint16_t* getTrigger2Threshold() { return &trigger2Threshold; }
+  static uint16_t* getTrigger3Threshold() { return &trigger3Threshold; }
   static unsigned long getCalibrationLedDelay() { return calibrationLedDelay; }
   static byte getI2cSlaveAddress() { return i2cSlaveAddress; }
-
+  static byte getColdTemp() { return coldTemp; }
+  static byte getHotTemp() { return hotTemp; }
+  static byte getAlarmTemp() { return alarmTemp; }
+  static byte getColdR() { return coldR; }
+  static byte getColdG() { return coldG; }
+  static byte getColdB() { return coldB; }
+  static byte getHotR() { return hotR; }
+  static byte getHotG() { return hotG; }
+  static byte getHotB() { return hotB; }
+  static boolean getEndstopHighActive() { return endstopHighActive > 0; }
+  static unsigned long getThermistorBeta() { return thermBeta; }
+  static float getThermistorNominal() { return thermNominal; }
+  static float getTemperatureNominal() { return tempNominal; }
+  static byte getThermistorNumSamples() { return thermNumSamples; }
+  static boolean getAlarmOutEnabled() { return alarmOutEnabled > 0; }
+  static boolean getRgbOutEnabled() { return rgbOutEnabled > 0; }
+  static boolean getAlarmHighActive() { return alarmHighActive > 0; }
+  static byte getDebugLevel() { return debugLevel; }
+  static void setDebugLevel( byte level) { debugLevel = level; }
 private:
   static void updateEepromFormat(byte version);
-  static void EEPROMUpdateLong(int address, long value);
+  static void EEPROMUpdateLong(long address, long value);
   static long EEPROMReadLong(long address);
-  static void EEPROMUpdateInt16(int address, uint16_t value);
+  static void EEPROMUpdateInt16(long address, uint16_t value);
   static long EEPROMReadInt16(long address);
+  static void EEPROMUpdateFloat(long address, float value);
+  static float EEPROMReadFloat(long address);
   
 private:
+  static byte debugLevel;
   static unsigned long longAverageBufferTime;
   static unsigned long defaultEndstopMinHighMs;
-  static uint16_t triggerThreshold;
+  static uint16_t trigger1Threshold;
+  static uint16_t trigger2Threshold;
+  static uint16_t trigger3Threshold;
   static unsigned long calibrationLedDelay;
   static byte i2cSlaveAddress;
+  static byte coldTemp;
+  static byte hotTemp;
+  static byte alarmTemp;
+  static byte coldR;
+  static byte coldG;
+  static byte coldB;
+  static byte hotR;
+  static byte hotG;
+  static byte hotB;
+  static byte endstopHighActive;
+  static float tempNominal;
+  static float thermNominal;
+  static unsigned long thermBeta;
+  static byte thermNumSamples;
+  static byte alarmOutEnabled;
+  static byte rgbOutEnabled;
+  static byte alarmHighActive;
 };
 

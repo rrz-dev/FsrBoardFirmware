@@ -73,7 +73,8 @@ void GCodeParser::parse(const char& c, AddCommandCallback addCommand)
           if (command->getCommandType() != UNKNOWN)
           {
             addCommand(*command);
-            command->setCommandType(UNKNOWN);
+            //TODO: ??? command.setCommandType(UNKNOWN);
+            command->reset();
           }
           break;
       }
@@ -208,8 +209,8 @@ void GCodeParser::parse(const char& c, AddCommandCallback addCommand)
       else
       {
         // not a number -> line number ended
-        long lineNumber = atol(buffer);
-        command->setLineNumber(lineNumber);
+        //long lineNumber = atol(buffer);
+        //command->setLineNumber(lineNumber);
         //Serial << "DEBUG: Line number: " << lineNumber << endl;
         changeState(None);
         resetBuffer();
@@ -278,6 +279,8 @@ void GCodeParser::reset()
   {
     command = new Command();
   }
+
+  command->reset();
 
   if (!parameter)
   {

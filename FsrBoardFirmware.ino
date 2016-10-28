@@ -22,6 +22,7 @@
 #include <Wire.h>
 
 #include "Configuration.h"
+#include "Color.h"
 #include "Command.h"
 #include "Commands.h"
 #include "Endstop.h"
@@ -29,17 +30,23 @@
 #include "Pins.h"
 #include "Sensor.h"
 #include "SensorLed.h"
+#include "Thermistor.h"
 #include "GCodeParser.h"
+#include "RGBLed.h"
 
-Sensor sensor[SENSOR_COUNT] = { Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, SENSOR1_ANALOG_PIN) 
-                              , Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, SENSOR2_ANALOG_PIN)
-                              , Sensor(DEFAULT_LONG_AVERAGE_BUFFER_SIZE, DEFAULT_SHORT_AVERAGE_BUFFER_SIZE, SENSOR3_ANALOG_PIN) 
+Sensor sensor[SENSOR_COUNT] = { Sensor(Configuration::getTrigger1Threshold(), SENSOR1_ANALOG_PIN) 
+                              , Sensor(Configuration::getTrigger2Threshold(), SENSOR2_ANALOG_PIN)
+                              , Sensor(Configuration::getTrigger3Threshold(), SENSOR3_ANALOG_PIN) 
                               } ;
 Endstop endstop;
 SensorLed sensorLed;
 GCodeParser parser;
+Thermistor thermistor;
+RGBLed leds;
 
 const int fsrDebugPin[] = { SENSOR1_LED_PIN, SENSOR2_LED_PIN, SENSOR3_LED_PIN };
+
+static boolean alarmOutTriggerMessage = false;
 
 void setup() 
 {
@@ -55,44 +62,99 @@ void setup()
   Wire.onReceive(receiveEvent);
     
   pinMode(CALIBRATION_SWITCH_PIN, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(CALIBRATION_SWITCH_PIN), startCalibration, FALLING);  //TODO: test whether to use FALLING or RISING
   
   for (size_t i = 0; i < SENSOR_COUNT; i++) 
   {
     sensor[i].reset();
 	  sensorLed.add(&sensor[i], fsrDebugPin[i]);
   }
+
+  pinMode(ALARM_OUT_PIN, OUTPUT);
+  digitalWrite(ALARM_OUT_PIN, Configuration::getAlarmHighActive() ? HIGH : LOW);
+
 }
 
 void loop() 
 {
+  unsigned long time = millis();
+  
   //
-  // update sensors, trigger endstop and handle calibration switch
+  // update sensors, trigger endstop
   //
-  bool calibrationSwitch = !digitalRead(CALIBRATION_SWITCH_PIN);
   bool sensorTriggered = false;
   for (size_t i = 0; i < SENSOR_COUNT; i++) 
   {
-    if (calibrationSwitch)
-    {
-      sensor[i].reset();
-    }
-    sensor[i].update(millis());
+    sensor[i].update(time);
     sensorTriggered |= sensor[i].is_triggered();
   }
-  endstop.update(millis(), sensorTriggered);
+
+  // Newline printing and slowing down for debugLevel 6 and 7.
+  Sensor::debugEndline();
+
+  endstop.update(time, sensorTriggered);
 
   //
   // update sensor debug led display
   //
-  sensorLed.update(millis());
+  sensorLed.update(time);
+
+  //
+  // Thermistor temperature reading and RGB LED output
+  //
+  thermistor.update(time);
+
+  leds.thermistor(thermistor.getCurrentTemperature());
+
+  //
+  // check alarm temperature
+  //
+  if (Configuration::getAlarmOutEnabled())
+  {
+    if (thermistor.getCurrentTemperature() >= Configuration::getAlarmTemp())
+    {
+      digitalWrite(ALARM_OUT_PIN, Configuration::getAlarmHighActive() ? LOW : HIGH);
+      if (Configuration::getDebugLevel() > 0 && !alarmOutTriggerMessage)
+      {
+        Serial.println("DEBUG:triggering alarm out");
+        alarmOutTriggerMessage = true;
+      }
+    }
+    else
+    {
+      digitalWrite(ALARM_OUT_PIN, Configuration::getAlarmHighActive() ? HIGH : LOW);
+      alarmOutTriggerMessage = false;
+    }
+  }
+
+/*
+  Serial.print("INFO: sensor raw debug: ");
+  for (int i = 0; i < SENSOR_COUNT; i++)
+  {
+    Serial.print(sensor[i].shortAverage());
+    Serial.print("/");
+    Serial.print(sensor[i].longAverage());
+    int v = sensor[i].shortAverage() - sensor[i].longAverage();
+    Serial.print(" (");
+    Serial.print(v);
+    Serial.print(") ; ");
+  }
+  Serial.println();
+*/  
 }
 
 void handleMCode(Command c)
 {
   switch (c.getCommandCode())
   {
+    case 111:   // debug
+      Configuration::setDebugLevel(c.getParameterValue(P));
+      Serial.print("Debuglevel set to ");
+      Serial.println(Configuration::getDebugLevel());
+
+      break;
     case 112:   // diagnose
-      Commands::printDiagnose(sensor[0], sensor[1], sensor[2]);
+      Commands::printDiagnose(sensor[0], sensor[1], sensor[2], thermistor);
       break;
     case 115:   // get firmware version and capabilities
       Commands::printFirmwareInfo();
@@ -111,6 +173,25 @@ void handleMCode(Command c)
       break;
     case 800:   // set key value
       Commands::setConfigurationValue(c.getParameterStringValue(K), c.getParameterValue(V));
+      break;
+    case 801:   // start calibration
+      Commands::startCalibration(sensor[0], sensor[1], sensor[2]);
+      break;
+    case 921:   // set RGB-LEDs
+      switch((int)c.getParameterValue(S)) {
+		  case 0:
+          leds.off();
+				  break;
+		  case 1: 
+          leds.set(c.getParameterValue(K, 255), c.getParameterValue(V, 255), c.getParameterValue(B, 255));
+				  break;
+		  case 2: 
+          leds.setUseThermistor();
+          break;
+      }
+      break;
+    default:
+      Commands::unknownCommand();
       break;
   }
 }
@@ -146,6 +227,13 @@ void serialEvent()
   while (Serial.available() > 0)  //TODO: limit byte reads per loop iteration
   {
     parser.parse( Serial.read(), addCommand );
+  }
+}
+
+void startCalibration() {
+  for (size_t i = 0; i < SENSOR_COUNT; i++)
+  {
+    sensor[i].reset();
   }
 }
 
