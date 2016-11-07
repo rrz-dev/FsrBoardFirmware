@@ -31,6 +31,8 @@
 #define CALIBRATION_SWITCH_PIN  2   // Switch (optional)
 
 #define ENDSTOP_OUT_PIN         13  // Endstop signal to master arduino
+#define ENDSTOP_ALT1_OUT_PIN    7   // first alternate Endstop signal to master arduino (defaults to AUX2_PIN)
+#define ENDSTOP_ALT2_OUT_PIN    8   // second alternate Endstop signal to master arduino (defaults to AUX3_PIN)
 
 #define LED_R                   3   // RGB stripe red (mosfet)
 #define LED_G                   5   // RGB stripe green (mosfet)
