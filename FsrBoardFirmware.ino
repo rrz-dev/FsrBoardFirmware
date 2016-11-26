@@ -38,7 +38,9 @@ Sensor sensor[SENSOR_COUNT] = { Sensor(Configuration::getTrigger1Threshold(), SE
                               , Sensor(Configuration::getTrigger2Threshold(), SENSOR2_ANALOG_PIN)
                               , Sensor(Configuration::getTrigger3Threshold(), SENSOR3_ANALOG_PIN) 
                               } ;
-Endstop endstop;
+Endstop endstop(ENDSTOP_OUT_PIN);
+Endstop endstop1(ENDSTOP_ALT1_OUT_PIN);
+Endstop endstop2(ENDSTOP_ALT2_OUT_PIN);
 SensorLed sensorLed;
 GCodeParser parser;
 Thermistor thermistor;
@@ -80,19 +82,19 @@ void loop()
   unsigned long time = millis();
   
   //
-  // update sensors, trigger endstop
+  // update sensors
   //
-  bool sensorTriggered = false;
   for (size_t i = 0; i < SENSOR_COUNT; i++) 
   {
     sensor[i].update(time);
-    sensorTriggered |= sensor[i].is_triggered();
   }
 
   // Newline printing and slowing down for debugLevel 6 and 7.
   Sensor::debugEndline();
 
-  endstop.update(time, sensorTriggered);
+  endstop.update(time, sensor[0].is_triggered());
+  endstop1.update(time, sensor[1].is_triggered());
+  endstop2.update(time, sensor[2].is_triggered());
 
   //
   // update sensor debug led display

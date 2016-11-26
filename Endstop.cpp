@@ -24,13 +24,14 @@
 
 #include <Arduino.h>
 
-Endstop::Endstop()
+Endstop::Endstop(int outPin)
   : isTriggered(false)
   , triggeredSince(0)
   , triggeredMessage(false)
+  , outPin(outPin)
 {
-  pinMode(ENDSTOP_OUT_PIN, OUTPUT);
-  digitalWrite(ENDSTOP_OUT_PIN, Configuration::getEndstopHighActive() ? HIGH : LOW);
+  pinMode(outPin, OUTPUT);
+  digitalWrite(outPin, Configuration::getEndstopHighActive() ? HIGH : LOW);
 }
 
 void Endstop::update(unsigned long time, bool triggered)
@@ -70,13 +71,13 @@ void Endstop::endstopHigh()
     Serial.println("INFO:triggering endstop out");
     triggeredMessage = true;
   }
-  digitalWrite(ENDSTOP_OUT_PIN, Configuration::getEndstopHighActive() ? LOW : HIGH);
+  digitalWrite(outPin, Configuration::getEndstopHighActive() ? LOW : HIGH);
 }
 
 void Endstop::endstopLow()
 {
   triggeredMessage = false;
-  digitalWrite(ENDSTOP_OUT_PIN, Configuration::getEndstopHighActive() ? HIGH : LOW);
+  digitalWrite(outPin, Configuration::getEndstopHighActive() ? HIGH : LOW);
 }
 
 bool Endstop::is_triggered()

@@ -23,7 +23,7 @@
 class Endstop
 {
 public:
-  Endstop();
+  Endstop(int outPin);
 
   void update(unsigned long time, bool triggered);
 
@@ -34,6 +34,7 @@ private:
   void endstopLow();
 
 private:
+  int outPin;
   bool isTriggered;
   unsigned long triggeredSince;
   long timeAccu;
