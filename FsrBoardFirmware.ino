@@ -63,6 +63,8 @@ void setup()
     
   pinMode(CALIBRATION_SWITCH_PIN, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(CALIBRATION_SWITCH_PIN), startCalibration, FALLING);  //TODO: test whether to use FALLING or RISING
+
+  endstop.init();
   
   for (size_t i = 0; i < SENSOR_COUNT; i++) 
   {

@@ -25,8 +25,9 @@ class Endstop
 public:
   Endstop();
 
-  void update(unsigned long time, bool triggered);
+  void init(); // needs to be executed after configuration was loaded
 
+  void update(unsigned long time, bool triggered);
   bool is_triggered();
 
 private:

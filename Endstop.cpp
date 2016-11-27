@@ -30,6 +30,10 @@ Endstop::Endstop()
   , triggeredMessage(false)
 {
   pinMode(ENDSTOP_OUT_PIN, OUTPUT);
+}
+
+void Endstop::init() 
+{
   digitalWrite(ENDSTOP_OUT_PIN, Configuration::getEndstopHighActive() ? HIGH : LOW);
 }
 
